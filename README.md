@@ -66,7 +66,7 @@ Use the files directly from jsDelivr — always serves the latest version from `
     // Core Slider JS
     const scriptCoreSlider = document.createElement('script');
     scriptCoreSlider.async = true;
-    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js)';
+    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js';
 
     // Custom core slider settings
     const scriptCoreSliderSettings = document.createElement('script');

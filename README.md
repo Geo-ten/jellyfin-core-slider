@@ -24,7 +24,7 @@ For this reason, it was kept lightweight and with fewer details — more feature
 - ⏸️ Smart autoplay with bounce direction (reverses at end instead of looping)
 - 🎯 Autoplay pauses on drag and resets timer on manual navigation
 - 🔄 Automatic show/hide based on current page
-- 📋 Support for custom curated lists via a `.txt` file
+- 📋 Support for custom curated lists via a `(file-name).txt` file
 
 ---
 
@@ -92,7 +92,7 @@ const core_slide_settings = {
         backdrop: 60,           // Backdrop image quality (0-100)
         logo: 40,               // Logo image quality (0-100)
     },
-    fileNameLocation: null,     // Path to custom list (null = random items)
+    fileNameLocation: null,     // Path to custom list ex. ('/assets/list.txt')
     shuffleInterval: 12000,     // Autoplay interval in ms
     maxOverviewLength: 230,     // Max overview text length (characters)
     maxItems: 6,                // Max number of slides to fetch
@@ -105,7 +105,7 @@ const core_slide_settings = {
 
 You can display specific items instead of random ones.
 
-1. Create a `.txt` file in your Jellyfin web folder:
+1. Create a `(file-name).txt` file in your Jellyfin web folder:
 
 ```
 My Curated List

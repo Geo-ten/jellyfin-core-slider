@@ -1,1 +1,176 @@
-# jellyfin-core-slider
+# Core Slider for Jellyfin
+
+A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile, and LG WebOS TV.
+
+> ⚠️ Tested on Jellyfin **10.10.7** — not tested on newer versions.  
+> Requires **ES2017+** (compatible with older Smart TV browsers).
+
+---
+
+## About
+
+The main goal of this slider was to work on **LG WebOS TV** with full remote control navigation, since [MakD's Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar) already covers Desktop and Mobile very well.
+
+For this reason, it was kept lightweight and with fewer details — more features will definitely be added over time.
+
+---
+
+## Features
+
+- 🎬 Displays random or curated movies/series from your Jellyfin library
+- 📱 Responsive — different layouts for Desktop, Mobile, and TV
+- 🖥️ LG WebOS TV support with full remote control navigation
+- 🖱️ Swipe/drag support with velocity-based slide detection
+- ⏸️ Smart autoplay with bounce direction (reverses at end instead of looping)
+- 🎯 Autoplay pauses on drag and resets timer on manual navigation
+- 🔄 Automatic show/hide based on current page
+- 📋 Support for custom curated lists via a `.txt` file
+
+---
+
+## Installation
+
+### Step 1 — Install the JavaScript Injector Plugin
+
+To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](https://github.com/n00bcodr/Jellyfin-JavaScript-Injector) plugin.
+
+1. In Jellyfin, go to **Dashboard → Plugins → Catalog → ⚙️**
+2. Click **➕** and add a new repository:
+   - **Name**: JavaScript Injector Repo
+   - **URL** (for Jellyfin 10.10.7):
+     ```
+     https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.10/manifest.json
+     ```
+3. Click **Save**, go to **Catalog**, find **JavaScript Injector**, and click **Install**
+4. Restart your Jellyfin server
+
+---
+
+### Step 2 — Add the slider files
+
+Copy the files into your Jellyfin Web assets folder:
+
+```
+/jellyfin-web/assets/js/core-slider.js
+/jellyfin-web/assets/css/core-slider.css
+```
+
+---
+
+### Step 3 — Inject via the plugin
+
+In the JavaScript Injector plugin, create a new script and paste:
+
+```html
+(function() {
+    'use strict';
+
+    // Core Slider CSS
+    const styleCoreSlider = document.createElement('link');
+    styleCoreSlider.rel = 'stylesheet';
+    styleCoreSlider.href = './assets/css/core-slider.css';
+
+    // Core Slider JS
+    const scriptCoreSlider = document.createElement('script');
+    scriptCoreSlider.async = true;
+    scriptCoreSlider.src = './assets/js/core-slider.js';
+
+    document.head.appendChild(styleCoreSlider);
+    document.body.appendChild(scriptCoreSlider);
+})();
+```
+
+---
+
+## Configuration
+
+Edit `core_slide_settings` at the top of `core-slider.js`:
+
+```javascript
+const core_slide_settings = {
+    quality: {
+        backdrop: 60,           // Backdrop image quality (0-100)
+        logo: 40,               // Logo image quality (0-100)
+    },
+    fileNameLocation: null,     // Path to custom list (null = random items)
+    shuffleInterval: 12000,     // Autoplay interval in ms
+    maxOverviewLength: 230,     // Max overview text length (characters)
+    maxItems: 6,                // Max number of slides to fetch
+};
+```
+
+---
+
+## Custom Curated List
+
+You can display specific items instead of random ones.
+
+1. Create a `.txt` file in your Jellyfin web folder:
+
+```
+My Curated List
+ItemID1
+ItemID2
+ItemID3
+```
+
+2. Set the path in settings:
+
+```javascript
+fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
+```
+
+> Item IDs can be found in the URL when browsing an item in Jellyfin.
+
+---
+
+## Device Support
+
+| Device | Navigation | Swipe | Autoplay |
+|--------|-----------|-------|---------|
+| Desktop | Arrows + Dots | Mouse drag | ✅ |
+| Mobile | Dots | Touch swipe | ✅ |
+| LG WebOS TV | Remote (← → ↑ ↓ OK) | — | ✅ |
+
+---
+
+## LG WebOS TV — Remote Controls
+
+| Button | Action |
+|--------|--------|
+| ← | Previous slide |
+| → | Next slide |
+| ↑ | Go to header menu |
+| ↓ | Go to content below slider |
+| OK | Open item details |
+
+---
+
+## Screenshots
+
+<img src="assets/images/screenshot-desktop.png" alt="Desktop" width="800" />
+<img src="assets/images/screenshot-mobile.png" alt="TV" width="800" />
+
+---
+
+## Credits
+
+- Inspired by and partially based on [MakD/Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar)
+- Built with ❤️ by [Geoten](https://www.geoten.dev)
+
+---
+
+## License
+
+<a href="/Geo-ten/jellyfin-core-slider/blob/main/LICENSE">
+    <img src="https://camo.githubusercontent.com/34ad60f034ebedc21db449989367c463968859dff01288a40076d7a3d303c569/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d446f6e27745f42655f415f4469636b2d726564" alt="DBAD License" data-canonical-src="https://img.shields.io/badge/License-Don't_Be_A_Dick-red" style="max-width: 100%;">
+</a>
+
+This project is licensed under the [DBAD License](https://dbad-license.org/) — same as the original project it derives from.
+
+| | |
+|---|---|
+| ✅ Personal use | Allowed |
+| ✅ Modifications | Allowed (contribute back) |
+| ❌ Commercial use | Not allowed |
+| ❌ Redistribution | Not allowed |

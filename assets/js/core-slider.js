@@ -1,14 +1,14 @@
 // Slider static settings
 const core_slide_settings = {
+    fileNameLocation: null,
     quality: {
         backdrop: 60,
         logo: 40,
     },
-    fileNameLocation: null,
-    shuffleInterval: 12000,
-    retryInterval: 1000,
+    maxItems: 6,
     maxOverviewLength: 230,
-    maxItems: 6
+    slideInterval: 12000,
+    retryInterval: 1000
 };
 
 // State management
@@ -26,7 +26,7 @@ const core_slide_data = {
     slideshow: {
         hasInitialized: false,
         currentSlideIndex: 0,
-        slideInterval: 12000,
+        slideInterval: core_slide_settings.slideInterval,
         itemIds: [],
         loadedItems: {},
         totalItems: 0,
@@ -37,6 +37,17 @@ const core_slide_data = {
         elements: {}
     },
 };
+
+// Override Settings
+if ( core_slider ) {
+    if ( core_slider.fileNameLocation ) { core_slide_settings.fileNameLocation = core_slider.fileNameLocation; }
+    if ( core_slider.quality_backdrop ) { core_slide_settings.quality.backdrop = core_slider.quality_backdrop; }
+    if ( core_slider.quality_logo ) { core_slide_settings.quality.logo = core_slider.quality_logo ;}
+    if ( core_slider.maxItems ) { core_slide_settings.maxItems = core_slider.maxItems; }
+    if ( core_slider.maxOverviewLength ) { core_slide_settings.maxOverviewLength = core_slider.maxOverviewLength; }
+    if ( core_slider.retryInterval ) { core_slide_settings.retryInterval = core_slider.retryInterval; }
+    if ( core_slider.slideInterval ) { core_slide_settings.setInterval = core_slider.slideInterval; core_slide_data.slideshow.slideInterval = core_slider.slideInterval; }
+}
 
 function coreSlider() {
     let wasLoggedIn = false;
@@ -430,7 +441,7 @@ function coreSlider() {
             }
 
             changeSlide(next);
-        }, core_slide_settings.shuffleInterval);
+        }, core_slide_settings.slideInterval);
     }
 
     function stopAutoplay() {

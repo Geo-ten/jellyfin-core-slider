@@ -48,13 +48,22 @@ To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](htt
 
 ### Step 2 — Add the slider files
 
+Go to the **JS Injector** from your dashboard, and create a new script.
+
+**Script Name**: (Whatever you like)
+
+**Section** (// Insert your custom JavaScript code here...): (Paste the code from the option A or B)
+
+And click **Save**
+
+
 You have two options:
 
 #### Option A — CDN via Github RAW (no download needed)
 
 Use the files directly from Github RAW — always serves the latest version from `main`:
 
-```html
+```javascript
 (function() {
     'use strict';
 
@@ -104,7 +113,7 @@ Download the latest release and copy the files into your Jellyfin Web assets fol
 
 Then inject via the plugin:
 
-```html
+```javascript
 (function() {
     'use strict';
 

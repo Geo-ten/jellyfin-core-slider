@@ -50,9 +50,9 @@ To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](htt
 
 You have two options:
 
-#### Option A — CDN via jsDelivr (no download needed)
+#### Option A — CDN via Github RAW (no download needed)
 
-Use the files directly from jsDelivr — always serves the latest version from `main`:
+Use the files directly from Github RAW — always serves the latest version from `main`:
 
 ```html
 (function() {
@@ -90,8 +90,6 @@ Use the files directly from jsDelivr — always serves the latest version from `
     document.body.appendChild(scriptCoreSlider);
 })();
 ```
-
-> ℹ️ To pin to a specific version, replace `@main` with the tag, e.g. `@v1.0.0`.
 
 ---
 

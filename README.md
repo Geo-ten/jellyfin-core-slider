@@ -149,6 +149,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 ## Screenshots
 
 <img src="/assets/images/screenshot-desktop.jpg" alt="Desktop" width="800" />
+<img src="/assets/images/screenshot-tv.jpg" alt="TV" width="800" />
 <img src="/assets/images/screenshot-mobile.jpg" alt="Mobile" width="300" />
 
 ---

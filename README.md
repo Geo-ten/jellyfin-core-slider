@@ -48,11 +48,15 @@ To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](htt
 
 ### Step 2 — Add the slider files
 
+#### How to add Core Slider in your Jellyfin
+
 Go to the **JS Injector** from your dashboard, and create a new script.
 
-**Script Name**: (Whatever you like)
+- **Script Name**: (Whatever you like)
 
-**Section** (// Insert your custom JavaScript code here...): (Paste the code from the option A or B)
+- **Section** `// Insert your custom JavaScript code here...`: (**Paste the code from the option A or B**)
+
+Check the checkbox **Enabled** and **Requires Authentication**
 
 And click **Save**
 

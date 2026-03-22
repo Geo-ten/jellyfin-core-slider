@@ -148,8 +148,8 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 
 ## Screenshots
 
-<img src="/Geo-ten/jellyfin-core-slider/blob/main/assets/images/screenshot-desktop.png" alt="Desktop" width="800" />
-<img src="/Geo-ten/jellyfin-core-slider/blob/main/assets/images/screenshot-mobile.png" alt="Mobile" width="300" />
+<img src="/Geo-ten/jellyfin-core-slider/blob/main/assets/images/screenshot-desktop.jpg" alt="Desktop" width="800" />
+<img src="/Geo-ten/jellyfin-core-slider/blob/main/assets/images/screenshot-mobile.jpg" alt="Mobile" width="300" />
 
 ---
 

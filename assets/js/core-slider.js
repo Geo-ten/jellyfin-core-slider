@@ -33,6 +33,7 @@ const core_slide_data = {
         direction: 1,
         isAnimating: false,
         isLoading: false,
+        isHome: null,
         elements: {}
     },
 };
@@ -440,6 +441,8 @@ function coreSlider() {
     }
 
     function resetAutoplay() {
+        if ( !core_slide_data.slideshow.isHome ) return;
+
         stopAutoplay();
         startAutoplay();
     }
@@ -827,11 +830,15 @@ function coreSlider() {
 
             const currentPath = window.location.href.toLowerCase().replace(window.location.origin, "");
             const isHome = currentPath.includes("/web/#/home.html") || currentPath.includes("/web/#/home") || currentPath.includes("/web/index.html#/home.html") || currentPath === "/web/index.html#/home" || currentPath === "/web/?#/home.html";
+            core_slide_data.slideshow.isHome = isHome;
 
             if ( isHome ) {
                 coreSlide.classList.remove('core-slider-hidden');
                 document.documentElement.classList.add('html-slider');
-                startAutoplay();
+                // ✅ Μόνο αν δεν τρέχει ήδη
+                if ( !core_slide_data.slideshow.slideInterval ) {
+                    startAutoplay();
+                }
             } else {
                 coreSlide.classList.add('core-slider-hidden');
                 document.documentElement.classList.remove('html-slider');

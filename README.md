@@ -50,7 +50,52 @@ To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](htt
 
 You have two options:
 
-#### Option A — Self-hosted
+#### Option A — CDN via jsDelivr (no download needed)
+
+Use the files directly from jsDelivr — always serves the latest version from `main`:
+
+```html
+(function() {
+    'use strict';
+
+    // Core Slider CSS
+    const styleCoreSlider = document.createElement('link');
+    styleCoreSlider.rel = 'stylesheet';
+    styleCoreSlider.href = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/css/core-slider.css';
+
+    // Core Slider JS
+    const scriptCoreSlider = document.createElement('script');
+    scriptCoreSlider.async = true;
+    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js)';
+
+    // Custom core slider settings
+    const scriptCoreSliderSettings = document.createElement('script');
+    scriptCoreSliderSettings.textContent = `
+        const core_slider = {
+            quality_backdrop: 60,
+            quality_logo: 40,
+            fileNameLocation: null,
+            maxOverviewLength: 230,
+            maxItems: 6,
+            slideInterval: 12000,
+            retryInterval: 1000,
+        };
+    `;
+    
+    // Add CSS to the head
+    document.head.appendChild(styleCoreSlider);
+
+    // Add scripts at the end of the body
+    document.body.appendChild(scriptCoreSliderSettings);
+    document.body.appendChild(scriptCoreSlider);
+})();
+```
+
+> ℹ️ To pin to a specific version, replace `@main` with the tag, e.g. `@v1.0.0`.
+
+---
+
+#### Option B — Self-hosted
 
 Download the latest release and copy the files into your Jellyfin Web assets folder:
 
@@ -83,7 +128,7 @@ Then inject via the plugin:
             quality_logo: 40,
             fileNameLocation: null,
             maxOverviewLength: 230,
-            maxItems: 7,
+            maxItems: 6,
             slideInterval: 12000,
             retryInterval: 1000,
         };
@@ -99,67 +144,20 @@ Then inject via the plugin:
 ```
 
 ---
-
-#### Option B — CDN via jsDelivr (no download needed)
-
-Use the files directly from jsDelivr — always serves the latest version from `main`:
-
-```html
-(function() {
-    'use strict';
-
-    // Core Slider CSS
-    const styleCoreSlider = document.createElement('link');
-    styleCoreSlider.rel = 'stylesheet';
-    styleCoreSlider.href = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/css/core-slider.css';
-
-    // Core Slider JS
-    const scriptCoreSlider = document.createElement('script');
-    scriptCoreSlider.async = true;
-    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js)';
-
-    // Custom core slider settings
-    const scriptCoreSliderSettings = document.createElement('script');
-    scriptCoreSliderSettings.textContent = `
-        const core_slider = {
-            quality_backdrop: 60,
-            quality_logo: 40,
-            fileNameLocation: null,
-            maxOverviewLength: 230,
-            maxItems: 7,
-            slideInterval: 12000,
-            retryInterval: 1000,
-        };
-    `;
-    
-    // Add CSS to the head
-    document.head.appendChild(styleCoreSlider);
-
-    // Add scripts at the end of the body
-    document.body.appendChild(scriptCoreSliderSettings);
-    document.body.appendChild(scriptCoreSlider);
-})();
-```
-
-> ℹ️ To pin to a specific version, replace `@main` with the tag, e.g. `@v1.0.0`.
-
----
-
 ## Configuration
 
-Edit `core_slide_settings` at the top of `core-slider.js`:
+Edit `const core_slider` at the JavaScript Injector Plugin:
 
 ```javascript
-const core_slide_settings = {
-    quality: {
-        backdrop: 60,           // Backdrop image quality (0-100)
-        logo: 40,               // Logo image quality (0-100)
-    },
-    fileNameLocation: null,     // Path to custom list (null = random items | ex. '/assets/list.txt')
-    shuffleInterval: 12000,     // Autoplay interval in ms
-    maxOverviewLength: 230,     // Max overview text length (characters)
-    maxItems: 6,                // Max number of slides to fetch
-};
+  const core_slider = {
+      quality_backdrop: 60,     // Backdrop image quality (0-100)
+      quality_logo: 40,         // Backdrop image quality (0-100)
+      fileNameLocation: null,   // Path to custom list (null = random items | ex. '/assets/list.txt')
+      maxOverviewLength: 230,   // Max overview text length (characters)
+      maxItems: 6,              // Max number of slides to fetch
+      slideInterval: 12000,     // Autoplay interval in ms
+      retryInterval: 1000,      // Retry in ms if ApiClient is not available
+  };
 ```
 
 ---

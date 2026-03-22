@@ -835,7 +835,7 @@ function coreSlider() {
             if ( isHome ) {
                 coreSlide.classList.remove('core-slider-hidden');
                 document.documentElement.classList.add('html-slider');
-                // ✅ Μόνο αν δεν τρέχει ήδη
+                // If it's not running
                 if ( !core_slide_data.slideshow.slideInterval ) {
                     startAutoplay();
                 }

@@ -75,7 +75,25 @@ Then inject via the plugin:
     scriptCoreSlider.async = true;
     scriptCoreSlider.src = './assets/js/core-slider.js';
 
+    // Custom core slider settings
+    const scriptCoreSliderSettings = document.createElement('script');
+    scriptCoreSliderSettings.textContent = `
+        const core_slider = {
+            quality_backdrop: 60,
+            quality_logo: 40,
+            fileNameLocation: null,
+            maxOverviewLength: 230,
+            maxItems: 7,
+            slideInterval: 12000,
+            retryInterval: 1000,
+        };
+    `;
+    
+    // Add CSS to the head
     document.head.appendChild(styleCoreSlider);
+
+    // Add scripts at the end of the body
+    document.body.appendChild(scriptCoreSliderSettings);
     document.body.appendChild(scriptCoreSlider);
 })();
 ```
@@ -98,9 +116,27 @@ Use the files directly from jsDelivr — always serves the latest version from `
     // Core Slider JS
     const scriptCoreSlider = document.createElement('script');
     scriptCoreSlider.async = true;
-    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js';
+    scriptCoreSlider.src = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main/assets/js/core-slider.js)';
 
+    // Custom core slider settings
+    const scriptCoreSliderSettings = document.createElement('script');
+    scriptCoreSliderSettings.textContent = `
+        const core_slider = {
+            quality_backdrop: 60,
+            quality_logo: 40,
+            fileNameLocation: null,
+            maxOverviewLength: 230,
+            maxItems: 7,
+            slideInterval: 12000,
+            retryInterval: 1000,
+        };
+    `;
+    
+    // Add CSS to the head
     document.head.appendChild(styleCoreSlider);
+
+    // Add scripts at the end of the body
+    document.body.appendChild(scriptCoreSliderSettings);
     document.body.appendChild(scriptCoreSlider);
 })();
 ```

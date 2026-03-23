@@ -11,8 +11,6 @@ A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile
 
 The main goal of this slider was to work on **LG WebOS TV** with full remote control navigation, since [MakD's Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar) already covers Desktop and Mobile very well.
 
-For this reason, it was kept lightweight and with fewer details — more features will definitely be added over time.
-
 ---
 
 ## Features

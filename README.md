@@ -85,7 +85,7 @@ Use the files directly from Github RAW — always serves the latest version from
     const scriptCoreSliderSettings = document.createElement('script');
     scriptCoreSliderSettings.textContent = `
         const coreSlider = {
-            AnimationEffectTV: true,
+            animationEffectTV: true,
             qualityBackdrop: 60,
             qualityLogo: 40,
             fileNameLocation: null,
@@ -143,7 +143,7 @@ Then inject via the plugin:
     const scriptCoreSliderSettings = document.createElement('script');
     scriptCoreSliderSettings.textContent = `
         const coreSlider = {
-            AnimationEffectTV: true,
+            animationEffectTV: true,
             qualityBackdrop: 60,
             qualityLogo: 40,
             fileNameLocation: null,
@@ -177,7 +177,7 @@ Edit `const coreSlider` at the JavaScript Injector Plugin:
 
 ```javascript
     const coreSlider = {
-        AnimationEffectTV: true,      // Keep the same animations effect on TV
+        animationEffectTV: true,      // Keep the same animations effect on TV
         qualityBackdrop: 60,          // Backdrop image quality (0-100)
         qualityLogo: 40,              // Backdrop image quality (0-100)
         fileNameLocation: null,       // Path to custom list (null = random items | ex. '/assets/list.txt')

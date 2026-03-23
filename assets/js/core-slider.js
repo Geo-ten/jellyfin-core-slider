@@ -69,7 +69,7 @@ if ( coreSlider ) {
     if ( coreSlider.enableInfoStarRating ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
 };
 
-function coreSlider() {
+function initCoreSlider() {
     // Step 1 (Wait for ApiClient to initialize before starting the slideshow)
     function waitForApiClient() {
 
@@ -888,4 +888,4 @@ function coreSlider() {
     initVisibilityObserver();
 }
 
-coreSlider();
+initCoreSlider();

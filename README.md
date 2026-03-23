@@ -84,7 +84,7 @@ Use the files directly from Github RAW — always serves the latest version from
     // Custom core slider settings
     const scriptCoreSliderSettings = document.createElement('script');
     scriptCoreSliderSettings.textContent = `
-        const core_slider = {
+        const coreSlider = {
             AnimationEffectTV: true,
             qualityBackdrop: 60,
             qualityLogo: 40,
@@ -173,10 +173,10 @@ Then inject via the plugin:
 ---
 ## Configuration
 
-Edit `const core_slider` at the JavaScript Injector Plugin:
+Edit `const coreSlider` at the JavaScript Injector Plugin:
 
 ```javascript
-    const core_slider = {
+    const coreSlider = {
         AnimationEffectTV: true,      // Keep the same animations effect on TV
         qualityBackdrop: 60,          // Backdrop image quality (0-100)
         qualityLogo: 40,              // Backdrop image quality (0-100)

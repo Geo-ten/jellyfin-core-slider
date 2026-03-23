@@ -134,14 +134,21 @@ Then inject via the plugin:
     // Custom core slider settings
     const scriptCoreSliderSettings = document.createElement('script');
     scriptCoreSliderSettings.textContent = `
-        const core_slider = {
-            quality_backdrop: 60,
-            quality_logo: 40,
+        const coreSlider = {
+            AnimationEffectTV: true,
+            qualityBackdrop: 60,
+            qualityLogo: 40,
             fileNameLocation: null,
             maxOverviewLength: 230,
             maxItems: 6,
+            searchType: 'Movie,Series',
             slideInterval: 12000,
             retryInterval: 1000,
+            enableInfoPremiereDate: true,
+            enableInfoGenre: true,
+            enableInfoAgeRating: true,
+            enableInfoRuntime: true,
+            enableInfoStarRating: true,
         };
     `;
     
@@ -160,15 +167,22 @@ Then inject via the plugin:
 Edit `const core_slider` at the JavaScript Injector Plugin:
 
 ```javascript
-  const core_slider = {
-      quality_backdrop: 60,     // Backdrop image quality (0-100)
-      quality_logo: 40,         // Backdrop image quality (0-100)
-      fileNameLocation: null,   // Path to custom list (null = random items | ex. '/assets/list.txt')
-      maxOverviewLength: 230,   // Max overview text length (characters)
-      maxItems: 6,              // Max number of slides to fetch
-      slideInterval: 12000,     // Autoplay interval in ms
-      retryInterval: 1000,      // Retry in ms if ApiClient is not available
-  };
+    const core_slider = {
+        AnimationEffectTV: true,      // Keep the same animations effect on TV
+        qualityBackdrop: 60,          // Backdrop image quality (0-100)
+        qualityLogo: 40,              // Backdrop image quality (0-100)
+        fileNameLocation: null,       // Path to custom list (null = random items | ex. '/assets/list.txt')
+        maxOverviewLength: 230,       // Max overview text length (characters)
+        maxItems: 6,                  // Max number of slides to fetch
+        searchType: 'Movie,Series',   // Random searchable items
+        slideInterval: 12000,         // Autoplay interval in ms
+        retryInterval: 1000,          // Retry in ms if ApiClient is not available
+        enableInfoPremiereDate: true, // Enable in the item info the premiere date
+        enableInfoGenre: true,        // Enable in the item info the genre
+        enableInfoAgeRating: true,    // Enable in the item info the age rating
+        enableInfoRuntime: true,      // Enable in the item info the runtime/seasons
+        enableInfoStarRating: true,   // Enable in the item info the community rating
+    };
 ```
 
 ---

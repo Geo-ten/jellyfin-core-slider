@@ -85,13 +85,20 @@ Use the files directly from Github RAW — always serves the latest version from
     const scriptCoreSliderSettings = document.createElement('script');
     scriptCoreSliderSettings.textContent = `
         const core_slider = {
-            quality_backdrop: 60,
-            quality_logo: 40,
+            AnimationEffectTV: true,
+            qualityBackdrop: 60,
+            qualityLogo: 40,
             fileNameLocation: null,
             maxOverviewLength: 230,
             maxItems: 6,
+            searchType: 'Movie,Series',
             slideInterval: 12000,
             retryInterval: 1000,
+            enableInfoPremiereDate: true,
+            enableInfoGenre: true,
+            enableInfoAgeRating: true,
+            enableInfoRuntime: true,
+            enableInfoStarRating: true,
         };
     `;
     

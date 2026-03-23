@@ -20,7 +20,7 @@ const coreSlideSettings = {
         runtime: true,
         starRating: true,
     },
-    AnimationEffectTV: true
+    animationEffectTV: true
 };
 
 // State management
@@ -52,7 +52,7 @@ const coreSlideData = {
 
 // Override Settings
 if ( coreSlider ) {
-    if ( coreSlider.AnimationEffectTV ) { coreSlideSettings.AnimationEffectTV = coreSlider.AnimationEffectTV; }
+    if ( coreSlider.animationEffectTV !== null ) { coreSlideSettings.animationEffectTV = coreSlider.animationEffectTV; }
     if ( coreSlider.fileNameLocation ) { coreSlideSettings.fileNameLocation = coreSlider.fileNameLocation; }
     if ( coreSlider.qualityBackdrop ) { coreSlideSettings.quality.backdrop = coreSlider.qualityBackdrop; }
     if ( coreSlider.qualityLogo ) { coreSlideSettings.quality.logo = coreSlider.qualityLogo ;}
@@ -62,11 +62,11 @@ if ( coreSlider ) {
     if ( coreSlider.slideButtonName ) { coreSlideSettings.button.slideButtonName = coreSlider.slideButtonName; }
     if ( coreSlider.slideInterval ) { coreSlideSettings.slideInterval = coreSlider.slideInterval; coreSlideData.slideshow.slideInterval = coreSlider.slideInterval; }
     if ( coreSlider.retryInterval ) { coreSlideSettings.retryInterval = coreSlider.retryInterval; }
-    if ( coreSlider.enableInfoPremiereDate ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
-    if ( coreSlider.enableInfoGenre ) { coreSlideSettings.info.genre = coreSlider.enableInfoGenre; }
-    if ( coreSlider.enableInfoAgeRating ) { coreSlideSettings.info.ageRating = coreSlider.enableInfoAgeRating; }
-    if ( coreSlider.enableInfoRuntime ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
-    if ( coreSlider.enableInfoStarRating ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
+    if ( coreSlider.enableInfoPremiereDate !== null ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
+    if ( coreSlider.enableInfoGenre !== null ) { coreSlideSettings.info.genre = coreSlider.enableInfoGenre; }
+    if ( coreSlider.enableInfoAgeRating !== null ) { coreSlideSettings.info.ageRating = coreSlider.enableInfoAgeRating; }
+    if ( coreSlider.enableInfoRuntime !== null ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
+    if ( coreSlider.enableInfoStarRating !== null ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
 };
 
 function initCoreSlider() {
@@ -290,7 +290,7 @@ function initCoreSlider() {
         coreSlideData.slideshow.isAnimating = true;
 
         // Animated transform
-        if ( coreSlideSettings.AnimationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' || coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
+        if ( coreSlideSettings.animationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' || coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
             coreSlideData.slideshow.elements.createSlides.style.transform = 'translateX(' + (-next * 100) + '%)';
         }
 
@@ -405,7 +405,7 @@ function initCoreSlider() {
         
         const coreSlide = document.createElement('div');
         coreSlide.id = 'core-slider';
-        if ( !coreSlideSettings.AnimationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' ) { coreSlide.className = 'core-slider-no-animation'; }
+        if ( !coreSlideSettings.animationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' ) { coreSlide.className = 'core-slider-no-animation'; }
 
         const createSlides = document.createElement('div');
         createSlides.className = 'core-slider-slides';

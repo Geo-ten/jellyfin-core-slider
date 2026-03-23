@@ -92,6 +92,7 @@ Use the files directly from Github RAW — always serves the latest version from
             maxOverviewLength: 230,
             maxItems: 6,
             searchType: 'Movie,Series',
+            slideButtonName: 'Show more',
             slideInterval: 12000,
             retryInterval: 1000,
             enableInfoPremiereDate: true,
@@ -149,6 +150,7 @@ Then inject via the plugin:
             maxOverviewLength: 230,
             maxItems: 6,
             searchType: 'Movie,Series',
+            slideButtonName: 'Show more',
             slideInterval: 12000,
             retryInterval: 1000,
             enableInfoPremiereDate: true,
@@ -182,6 +184,7 @@ Edit `const core_slider` at the JavaScript Injector Plugin:
         maxOverviewLength: 230,       // Max overview text length (characters)
         maxItems: 6,                  // Max number of slides to fetch
         searchType: 'Movie,Series',   // Random searchable items
+        slideButtonName: 'Show more', // The button name for the info link
         slideInterval: 12000,         // Autoplay interval in ms
         retryInterval: 1000,          // Retry in ms if ApiClient is not available
         enableInfoPremiereDate: true, // Enable in the item info the premiere date

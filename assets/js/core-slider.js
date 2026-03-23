@@ -10,7 +10,7 @@ const coreSlideSettings = {
     slideInterval: 12000,
     retryInterval: 1000,
     button: {
-        slideButton: 'Show more'
+        slideButtonName: 'Show more'
     },
     searchType: 'Movie,Series',
     info: {
@@ -59,6 +59,7 @@ if ( coreSlider ) {
     if ( coreSlider.maxItems ) { coreSlideSettings.maxItems = coreSlider.maxItems; }
     if ( coreSlider.maxOverviewLength ) { coreSlideSettings.maxOverviewLength = coreSlider.maxOverviewLength; }
     if ( coreSlider.searchType ) { coreSlideSettings.searchType = coreSlider.searchType; }
+    if ( coreSlider.slideButtonName ) { coreSlideSettings.button.slideButtonName = coreSlider.slideButtonName; }
     if ( coreSlider.slideInterval ) { coreSlideSettings.slideInterval = coreSlider.slideInterval; coreSlideData.slideshow.slideInterval = coreSlider.slideInterval; }
     if ( coreSlider.retryInterval ) { coreSlideSettings.retryInterval = coreSlider.retryInterval; }
     if ( coreSlider.enableInfoPremiereDate ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
@@ -544,7 +545,7 @@ function coreSlider() {
 
             const createSlideButton = document.createElement('button');
             createSlideButton.type = `button`;
-            createSlideButton.innerHTML = `${coreSlideSettings.button.slideButton}`;
+            createSlideButton.innerHTML = `${coreSlideSettings.button.slideButtonName}`;
             createSlideButton.onclick = function() {
                 Emby.Page.show(`/details?id=${getItem.Id}&serverId=${coreSlideData.jellyfinData.serverId}`);
             };

@@ -38,7 +38,7 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 
 To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](https://github.com/n00bcodr/Jellyfin-JavaScript-Injector) plugin.
 
-1. In Jellyfin, go to **Dashboard ➡ Plugins ➡ Catalog ➡ ⚙️**
+1. In Jellyfin, go to **Dashboard → Plugins → Catalog → ⚙️**
 2. Click **➕** and add a new repository:
    - **Name**: JavaScript Injector Repo
    - **URL** (for Jellyfin 10.10.7):
@@ -182,7 +182,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 |--------|-----------|-------|---------|
 | Desktop | Arrows + Dots | Mouse drag | ✔ |
 | Mobile | Dots | Touch swipe | ✔ |
-| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ 🆗) | Remote swipe | ✔ |
+| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ OK) | Remote swipe | ✔ |
 
 ---
 
@@ -194,7 +194,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 | ➡ | Next slide |
 | ⬆ | Go to header menu |
 | ⬇ | Go to content below slider |
-| 🆗 | Open item details |
+| OK | Open item details |
 
 ---
 

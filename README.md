@@ -182,7 +182,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 |--------|-----------|-------|---------|
 | Desktop | Arrows + Dots | Mouse drag | ✔ |
 | Mobile | Dots | Touch swipe | ✔ |
-| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ OK) | Remote swipe | ✔ |
+| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ 🆗) | Remote swipe | ✔ |
 
 ---
 
@@ -194,7 +194,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 | ➡ | Next slide |
 | ⬆ | Go to header menu |
 | ⬇ | Go to content below slider |
-| OK | Open item details |
+| 🆗 | Open item details |
 
 ---
 

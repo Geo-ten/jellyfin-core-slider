@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.0.0
+    Version: 1.1.0.1
 */
 
 :root {
@@ -356,7 +356,7 @@
 
 .core-slide-buttons button:hover,
 .core-slide-buttons a:hover {
-    transform: scale(1.15);
+    transform: scale(1.10);
 }
 
 .core-slide-buttons button:not(:last-child) {
@@ -364,8 +364,8 @@
 }
 
 .core-slide-buttons .core-slide-button-play {
-    background-color: var(--slider-color-black);
-    color: var(--slider-color-white);
+    background-color: var(--slider-color-white);
+    color: var(--slider-color-black);
 }
 
 .core-slide-buttons .core-slide-button-info,

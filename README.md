@@ -38,7 +38,7 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 
 To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](https://github.com/n00bcodr/Jellyfin-JavaScript-Injector) plugin.
 
-1. In Jellyfin, go to **Dashboard → Plugins → Catalog → ⚙️**
+1. In Jellyfin, go to **Dashboard ➡ Plugins ➡ Catalog ➡ ⚙️**
 2. Click **➕** and add a new repository:
    - **Name**: JavaScript Injector Repo
    - **URL** (for Jellyfin 10.10.7):
@@ -180,9 +180,9 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 
 | Device | Navigation | Swipe | Autoplay |
 |--------|-----------|-------|---------|
-| Desktop | Arrows + Dots | Mouse drag | ✅ |
-| Mobile | Dots | Touch swipe | ✅ |
-| LG WebOS TV | Remote (← → ↑ ↓ OK) | - | ✅ |
+| Desktop | Arrows + Dots | Mouse drag | ✔ |
+| Mobile | Dots | Touch swipe | ✔ |
+| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ OK) | Remote swipe | ✔ |
 
 ---
 
@@ -190,10 +190,10 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 
 | Button | Action |
 |--------|--------|
-| ← | Previous slide |
-| → | Next slide |
-| ↑ | Go to header menu |
-| ↓ | Go to content below slider |
+| ⬅ | Previous slide |
+| ➡ | Next slide |
+| ⬆ | Go to header menu |
+| ⬇ | Go to content below slider |
 | OK | Open item details |
 
 ---
@@ -213,7 +213,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 ## Credits
 
 - Inspired by and partially based on [MakD/Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar)
-- Built with ❤️ by [Geoten](https://www.geoten.dev)
+- Built with ❤ by [Geoten](https://www.geoten.dev)
 
 ---
 

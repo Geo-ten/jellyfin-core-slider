@@ -340,10 +340,8 @@
     display: flex;
     padding: 7px 11px;
     border-radius: var(--slider-border-radius);
-    background-color: var(--slider-color-black);
     border: 1px solid transparent;
     font-family: var(--slider-font-family);
-    color: var(--slider-color-white);
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -365,9 +363,15 @@
     margin-right: 10px;
 }
 
+.core-slide-buttons .core-slide-button-play {
+    background-color: var(--slider-color-black);
+    color: var(--slider-color-white);
+}
+
 .core-slide-buttons .core-slide-button-info,
 .core-slide-buttons .core-slide-button-favorite {
     background-color: var(--slider-color-black-transparent);
+    color: var(--slider-color-white);
 }
 
 /* Slider dots */

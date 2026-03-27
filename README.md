@@ -94,8 +94,8 @@ Go to the **JS Injector** from your dashboard, and create a new script.
             enableInfoAgeRating: true,
             enableInfoRuntime: true,
             enableInfoStarRating: true,
-            slideButtonPlay: { name: 'Play', enabled: true },
-            slideButtonInfo: { name: '', enabled: true },
+            slideButtonPlay: { name: 'Play Now', enabled: true },
+            slideButtonInfo: { name: 'Details', enabled: true },
             slideButtonFavorite: { name: '', enabled: true }
         };
     `;

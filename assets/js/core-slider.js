@@ -13,8 +13,8 @@ const coreSlideSettings = {
     retryInterval: 1000,
     theme: 'default',
     button: {
-        play: { name: 'Play', enabled: true },
-        info: { name: '', enabled: true },
+        play: { name: 'Play Now', enabled: true },
+        info: { name: 'Details', enabled: true },
         favorite: { name: '', enabled: true },
     },
     searchType: 'Movie,Series',
@@ -44,6 +44,7 @@ const coreSlideData = {
         currentSlideIndex: 0,
         slideInterval: coreSlideSettings.slideInterval,
         itemIds: [],
+        preloadImages: [],
         loadedItems: {},
         totalItems: 0,
         direction: 1,
@@ -306,13 +307,30 @@ function initCoreSlider() {
     }
 
     // Change slide trigger
-    function changeSlide(next) {
-        if ( coreSlideData.slideshow.isAnimating || next === coreSlideData.slideshow.currentSlideIndex ) { return; }
+    function changeSlide(next, slideWidth) {
+        const animationEffectEvent = coreSlideSettings.animationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv';
+        const animationEffectEventTV = coreSlideData.jellyfinData.deviceLayout !== 'tv' && coreSlideSettings.animationEffect;
+
+        // Prevent Slider to return something wrong
+        if ( coreSlideData.slideshow.isAnimating || next === coreSlideData.slideshow.currentSlideIndex || next > coreSlideData.slideshow.totalItems - 1 || next < 0 ) {
+            // Return slider event to previous position
+            if ( (animationEffectEvent || animationEffectEventTV) && event ) {
+                coreSlideData.slideshow.elements.createSlides.style.transform = 'translateX(' + ( -coreSlideData.slideshow.currentSlideIndex * slideWidth ) + 'px)';
+            }
+            return;
+        }
+
+        // Preload (one-time) next image
+        if ( coreSlideData.slideshow.preloadImages.length !== coreSlideData.slideshow.totalItems && !coreSlideData.slideshow.preloadImages.includes(next + 1) ) {
+            preloadNextSlideImage(next + 1, coreSlideData);
+        }
+
+        // Start animation
         coreSlideData.slideshow.isAnimating = true;
 
         // Animated transform
-        if ( coreSlideSettings.animationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' || coreSlideData.jellyfinData.deviceLayout !== 'tv' && coreSlideSettings.animationEffect ) {
-            coreSlideData.slideshow.elements.createSlides.style.transform = 'translateX(' + (-next * 100) + '%)';
+        if ( animationEffectEvent || animationEffectEventTV ) {
+            coreSlideData.slideshow.elements.createSlides.style.transform = 'translateX(' + ( -next * 100 ) + '%)';
         }
 
         coreSlideData.slideshow.elements.createSlides.querySelectorAll('.core-slide').forEach(function(slide, key) {
@@ -329,6 +347,29 @@ function initCoreSlider() {
         }, 350);
 
         resetAutoplay();
+    }
+
+    // Pre-load next image
+    function preloadNextSlideImage(nextIndex) {
+        const slides = coreSlideData.slideshow.elements.createSlides.querySelectorAll('.core-slide');
+        const nextSlide = slides[nextIndex];
+        if ( !nextSlide ) { return; }
+
+        coreSlideData.slideshow.preloadImages.push(nextIndex);
+
+        nextSlide.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+            if ( !img.src ) { return; }
+            img.loading = 'eager';
+        });
+
+        // Pre-load at the init the second slide image
+        if ( nextIndex === 0 ) { 
+            coreSlideData.slideshow.preloadImages.push(nextIndex + 1); 
+            slides[nextIndex + 1].querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+                if ( !img.src ) { return; }
+                img.loading = 'eager';
+            });
+        }
     }
 
     async function loadDataSlides() {
@@ -358,14 +399,17 @@ function initCoreSlider() {
                 const dot = createDotElement(i);
                 createSlides.appendChild(slide);
                 createDots.appendChild(dot);
+
+                // Pre-load the next image if the current slide is the first
+                if ( i === 1 ) { preloadNextSlideImage(i - 1); }
             }
 
             // Arrows
             if ( buttonNext ) {
-                buttonNext.onclick = function() { changeSlide((coreSlideData.slideshow.currentSlideIndex + 1) % coreSlideData.slideshow.totalItems); };
+                buttonNext.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex + 1); };
             }
             if ( buttonPrevious ) {
-                buttonPrevious.onclick = function() { changeSlide((coreSlideData.slideshow.currentSlideIndex - 1 + coreSlideData.slideshow.totalItems) % coreSlideData.slideshow.totalItems); };
+                buttonPrevious.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex - 1); };
             }
 
             // Mouse/touch events
@@ -571,7 +615,7 @@ function initCoreSlider() {
                 const createSlideButtonPlay = document.createElement('button');
                 createSlideButtonPlay.type = `button`;
                 createSlideButtonPlay.className = `core-slide-button-play`;
-                createSlideButtonPlay.innerHTML = `<span class="material-icons play_arrow" aria-hidden="true"></span> ${coreSlideSettings.button.play.name}`;
+                createSlideButtonPlay.innerHTML = `<span class="material-icons play_arrow" aria-hidden="true"></span> ${coreSlideSettings.button.play.name ? `<p>${coreSlideSettings.button.play.name}</p>` : '' }`;
                 createSlideButtonPlay.onclick = async function() {
                     try {
                         // Get the session id
@@ -604,7 +648,7 @@ function initCoreSlider() {
                 const createSlideButtonInfo = document.createElement('button');
                 createSlideButtonInfo.type = `button`;
                 createSlideButtonInfo.className = `core-slide-button-info`;
-                createSlideButtonInfo.innerHTML = `<span class="material-icons info_outline" aria-hidden="true"></span> ${coreSlideSettings.button.info.name}`;
+                createSlideButtonInfo.innerHTML = `<span class="material-icons info_outline" aria-hidden="true"></span> ${coreSlideSettings.button.info.name ? `<p>${coreSlideSettings.button.info.name}</p>` : '' }`;
                 createSlideButtonInfo.onclick = function() {
                     Emby.Page.show(`/details?id=${getItem.Id}&serverId=${coreSlideData.jellyfinData.serverId}`);
                 };
@@ -620,7 +664,7 @@ function initCoreSlider() {
                 createSlideButtonFavorite.type = `button`;
                 createSlideButtonFavorite.classList.add(`core-slide-button-favorite`);
                 if ( isFavorite ) { createSlideButtonFavorite.classList.add("core-slide-button-favorite-active"); }
-                createSlideButtonFavorite.innerHTML = `<span class="material-icons favorite_outline" aria-hidden="true"></span> ${coreSlideSettings.button.favorite.name}`;
+                createSlideButtonFavorite.innerHTML = `<span class="material-icons favorite_outline" aria-hidden="true"></span> ${coreSlideSettings.button.favorite.name ? `<p>${coreSlideSettings.button.favorite.name}</p>` : '' }`;
                 createSlideButtonFavorite.onclick = async function() {
                     try {
                         const method = isFavorite ? "DELETE" : "POST";
@@ -696,7 +740,7 @@ function initCoreSlider() {
                         e.preventDefault();
                         e.stopImmediatePropagation();
                         if ( coreSlideData.slideshow.currentSlideIndex > 0 ) {
-                            changeSlide((coreSlideData.slideshow.currentSlideIndex - 1 + coreSlideData.slideshow.totalItems) % coreSlideData.slideshow.totalItems);
+                            changeSlide(coreSlideData.slideshow.currentSlideIndex - 1);
                         }
                     }
                     break;
@@ -706,7 +750,7 @@ function initCoreSlider() {
                         e.preventDefault();
                         e.stopImmediatePropagation();
                         if ( coreSlideData.slideshow.currentSlideIndex < coreSlideSettings.maxItems - 1 ) {
-                            changeSlide((coreSlideData.slideshow.currentSlideIndex + 1) % coreSlideData.slideshow.totalItems);
+                            changeSlide(coreSlideData.slideshow.currentSlideIndex + 1);
                         }
                     }
                     break;
@@ -876,18 +920,24 @@ function initCoreSlider() {
         createSlides.addEventListener('pointerup', function() {
             if ( !isDragging ) { return; }
             isDragging = false;
-
+            
             const diff = pointerCurrentX - pointerStartX;
             const elapsed = Date.now() - pointerStartTime;
             const slideWidth = createSlides.parentElement.offsetWidth;
 
-            if ( Math.abs(diff) < 5 ) {
-                if ( coreSlideSettings.animationEffect ) {
-                    createSlides.style.transform = 'translateX(' + (-coreSlideData.slideshow.currentSlideIndex * slideWidth) + 'px)';
-                }
+            function resetSlide() {
                 createSlides.classList.remove('touch-dragging', 'no-select');
                 pointerStartX = 0;
                 pointerCurrentX = 0;
+            };
+            
+            // Remove accidentaly touch event
+            if ( Math.abs(diff) < 5 ) {
+                // Revert slide to original position
+                if ( coreSlideSettings.animationEffect ) {
+                    createSlides.style.transform = 'translateX(' + ( -coreSlideData.slideshow.currentSlideIndex * slideWidth ) + 'px)';
+                }
+                resetSlide();
                 return;
             }
 
@@ -895,19 +945,15 @@ function initCoreSlider() {
             const distanceRatio = Math.abs(diff) / slideWidth;
             const shouldChange = velocity > VELOCITY_THRESHOLD || distanceRatio > DISTANCE_THRESHOLD;
 
-            if ( shouldChange && diff < 0 && coreSlideData.slideshow.currentSlideIndex < coreSlideData.slideshow.totalItems - 1 ) {
-                changeSlide(coreSlideData.slideshow.currentSlideIndex + 1);
-            } else if ( shouldChange && diff > 0 && coreSlideData.slideshow.currentSlideIndex > 0 ) {
-                changeSlide(coreSlideData.slideshow.currentSlideIndex - 1);
+            if ( shouldChange && diff < 0 ) {
+                changeSlide(coreSlideData.slideshow.currentSlideIndex + 1, slideWidth);
+            } else if ( shouldChange && diff > 0 ) {
+                changeSlide(coreSlideData.slideshow.currentSlideIndex - 1, slideWidth);
             } else {
-                if ( coreSlideSettings.animationEffect ) {
-                    createSlides.style.transform = 'translateX(' + (-coreSlideData.slideshow.currentSlideIndex * slideWidth) + 'px)';
-                }
+                changeSlide(coreSlideData.slideshow.currentSlideIndex, slideWidth);
             }
-
-            createSlides.classList.remove('touch-dragging', 'no-select');
-            pointerStartX = 0;
-            pointerCurrentX = 0;
+            
+            resetSlide();
 
             // Resume autoplay after dragging
             resetAutoplay();

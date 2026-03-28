@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.1
+    Version: 1.1.1.2
 */
 
 :root {
@@ -26,10 +26,12 @@
     --slider-color-black: #000000;
     --slider-color-black-transparent: #00000050;
     --slider-color-black-dark-transparent: #000000b0;
+    --slider-height-gap: 1.2em;
     --slider-height-desktop: 700px;
     --slider-height-mobile: 400px;
     --slider-height-tv: 740px;
     --slider-height-wide: 80vh;
+    --slider-height-header: 0;
     --slider-transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
     --slider-transition-duration: 350ms;
     --slider-border-radius-min: 9px;
@@ -57,7 +59,7 @@
     height: auto;
     position: relative;
     display: block;
-    margin-top: 5.2em;
+    margin-top: calc(var(--slider-height-gap) + var(--slider-height-header));
     overflow: hidden;
     border-radius: var(--slider-border-radius-min);
     margin-left: max(env(safe-area-inset-left), 3.3%);
@@ -65,19 +67,13 @@
     z-index: 1;
 }
 
-@media all and (max-width: 991px) {
-    #core-slider {
-        margin-top: 8em;
-    }
-}
-
 .html-slider #reactRoot .homeSectionsContainer {
-    margin-top: var(--slider-height-desktop);
+    margin-top: calc(var(--slider-height-desktop) + var(--slider-height-gap));
 }
 
 @media all and (max-width: 991px) {
     .html-slider #reactRoot .homeSectionsContainer {
-        margin-top: var(--slider-height-mobile);
+        margin-top: calc(var(--slider-height-mobile) + var(--slider-height-gap));
     }
 }
 
@@ -495,7 +491,7 @@
 
 /* TV - Slider slide */
 .layout-tv.html-slider #reactRoot .homeSectionsContainer {
-    margin-top: calc(var(--slider-height-tv) - 70px);
+    margin-top: calc(var(--slider-height-tv) - 70px + var(--slider-height-gap));
 }
 
 .layout-tv .core-slider-slides {

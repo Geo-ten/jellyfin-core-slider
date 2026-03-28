@@ -91,7 +91,7 @@ function initCoreSlider() {
     }
 
     // Step 2 (Initializes Jellyfin data from ApiClient)
-    async function initCoreData(callback) {
+    function initCoreData(callback) {
         if ( !window.ApiClient ) {
             console.warn("⏳ window.ApiClient is not available yet. Retrying...");
             setTimeout(() => initCoreData(callback), coreSlideSettings.retryInterval);
@@ -115,6 +115,7 @@ function initCoreSlider() {
                 serverId: apiClient._serverInfo.Id || "Not Found",
                 serverAddress: apiClient._serverAddress || "Not Found",
             };
+            
             if ( callback && typeof callback === "function" ) {
                 callback();
             }
@@ -125,23 +126,18 @@ function initCoreSlider() {
     };
 
     // Step 3 (Initialize the slideshow)
-    async function initCoreDataSlides() {
-        if ( coreSlideData.slideshow.hasInitialized ) {
+    function initCoreDataSlides() {
+        if (coreSlideData.slideshow.hasInitialized) {
             console.log("⚠️ Slideshow already initialized, skipping");
             return;
         } else {
             coreSlideData.slideshow.hasInitialized = true;
         }
 
-        try {
-            console.log("🌟 Initializing Enhanced Jellyfin Slideshow");
-            await loadDataSlides();
+        console.log("🌟 Initializing Enhanced Jellyfin Slideshow");
 
-            console.log("✅ Enhanced Jellyfin Slideshow initialized successfully");
-        } catch (error) {
-            console.error("Error initializing slideshow:", error);
-            coreSlideData.slideshow.hasInitialized = false;
-        }
+        // Call loadDataSlides
+        loadDataSlides();
     };
 
     // Step 4
@@ -153,60 +149,66 @@ function initCoreSlider() {
     };
 
     // Fetches random items from the server
-    async function randomSlides() {
-        try {
-            if ( !coreSlideData.jellyfinData.accessToken || coreSlideData.jellyfinData.accessToken === "Not Found" ) {
-                console.warn("Access token not available. Delaying API request...");
-                return [];
+    function randomSlides() {
+        return new Promise(function(resolve, reject) {
+            try {
+                if ( !coreSlideData.jellyfinData.accessToken || coreSlideData.jellyfinData.accessToken === "Not Found" ) {
+                    console.warn("Access token not available. Delaying API request...");
+                    resolve([]);
+                    return;
+                }
+
+                if ( !coreSlideData.jellyfinData.serverAddress || coreSlideData.jellyfinData.serverAddress === "Not Found" ) {
+                    console.warn("Server address not available. Delaying API request...");
+                    resolve([]);
+                    return;
+                }
+
+                console.log("Fetching random items from server...");
+
+                fetch(`${coreSlideData.jellyfinData.serverAddress}/Items?IncludeItemTypes=${coreSlideSettings.searchType}&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&sortBy=Random&isPlayed=False&enableUserData=true&Limit=${coreSlideSettings.maxItems}&fields=Id,ImageTags,RemoteTrailers`, {
+                    headers: getAuthHeader(),
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    const items = data.Items || [];
+                    const filteredItems = items.filter((item) => item.ImageTags && item.ImageTags.Logo).map((item) => item.Id);
+
+                    resolve(filteredItems);
+                }).catch(function(error) {
+                    console.error(`Failed to fetch items: ${error.status} ${error.statusText}`, error);
+                    resolve([]);
+                });
+            } catch (error) {
+                console.error(`Failed to fetch items: ${response.status} ${response.statusText}`, error);
+                resolve([]);
             }
-
-            if ( !coreSlideData.jellyfinData.serverAddress || coreSlideData.jellyfinData.serverAddress === "Not Found" ) {
-                console.warn("Server address not available. Delaying API request...");
-                return [];
-            }
-
-            console.log("Fetching random items from server...");
-
-            const response = await fetch(`${coreSlideData.jellyfinData.serverAddress}/Items?IncludeItemTypes=${coreSlideSettings.searchType}&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&sortBy=Random&isPlayed=False&enableUserData=true&Limit=${coreSlideSettings.maxItems}&fields=Id,ImageTags,RemoteTrailers`, {
-                headers: getAuthHeader(),
-            });
-
-            if ( !response.ok ) {
-                console.error(`Failed to fetch items: ${response.status} ${response.statusText}`);
-                return [];
-            }
-
-            const data = await response.json();
-            const items = data.Items || [];
-
-            console.log(`Successfully fetched ${items.length} random items from server`);
-            return items.filter((item) => item.ImageTags && item.ImageTags.Logo).map((item) => item.Id);
-        } catch (error) {
-            console.error("Error fetching item IDs:", error);
-            return [];
-        }
+        });
     };
 
-    async function loadDataList() {
-        try {
-            const listFileName = `${coreSlideData.jellyfinData.serverAddress}/web/${coreSlideSettings.fileNameLocation}?userId=${coreSlideData.jellyfinData.userId}`;
-            const response = await fetch(listFileName);
-
-            if (!response.ok) {
-                console.warn("list not found or inaccessible. Using random items.");
-                return [];
+    function loadDataList() {
+        return new Promise(function(resolve, reject) {
+            try {
+                const listFileName = `${coreSlideData.jellyfinData.serverAddress}/web/${coreSlideSettings.fileNameLocation}?userId=${coreSlideData.jellyfinData.userId}`;
+                
+                fetch(listFileName).then(function(response) {
+                    return response.text();
+                }).then(function(text) {
+                    const ids = text.split("\n").map((id) => id.trim()).filter((id) => id).slice(1);
+                    resolve(ids);
+                }).catch(function(error) {
+                    console.error("list not found or inaccessible. Using random items.", error);
+                    resolve([]);
+                });
+            } catch (error) {
+                console.error("Error fetching list:", error);
+                resolve([]);
             }
-
-            const text = await response.text();
-            return text.split("\n").map((id) => id.trim()).filter((id) => id).slice(1);
-        } catch (error) {
-            console.error("Error fetching list:", error);
-            return [];
-        }
+        });
     };
 
     // Build image urls
-    async function buildImageUrl(item, imageType, index, serverAddress, quality) {
+    function buildImageUrl(item, imageType, index, serverAddress, quality) {
         const itemId = item.Id;
         let tag = null;
 
@@ -247,35 +249,37 @@ function initCoreSlider() {
     }
 
     // Get the item details
-    async function fetchItemDetails(itemId) {
-        try {
-            if ( coreSlideData.slideshow.loadedItems[itemId] ) {
-                return coreSlideData.slideshow.loadedItems[itemId];
+    function fetchItemDetails(itemId) {
+        return new Promise(function(resolve, reject) {
+            try {
+                if ( coreSlideData.slideshow.loadedItems[itemId] ) {
+                    resolve(coreSlideData.slideshow.loadedItems[itemId]);
+                    return;
+                }
+
+                fetch(`${coreSlideData.jellyfinData.serverAddress}/Items/${itemId}`, {
+                    headers: getAuthHeader(),
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(itemData) {
+                    // Import Images
+                    itemData.Images = { 
+                        Backdrop: buildImageUrl(itemData, "Backdrop", 0, coreSlideData.jellyfinData.serverAddress, coreSlideSettings.quality.backdrop),
+                        Logo: buildImageUrl(itemData, "Logo", undefined, coreSlideData.jellyfinData.serverAddress, coreSlideSettings.quality.logo)
+                    };
+
+                    coreSlideData.slideshow.loadedItems[itemId] = itemData;
+                    
+                    resolve(itemData);
+                }).catch(function(error) {
+                    console.error(`Failed to fetch item details: ${error.statusText}`, error);
+                    resolve(null);
+                });
+            } catch (error) {
+                console.error(`Error fetching details for item ${itemId}:`, error);
+                resolve(null);
             }
-
-            const response = await fetch(`${coreSlideData.jellyfinData.serverAddress}/Items/${itemId}`, {
-                headers: getAuthHeader(),
-            });
-
-            if ( !response.ok ) {
-                throw new Error(`Failed to fetch item details: ${response.statusText}`);
-            }
-
-            const itemData = await response.json();
-
-            coreSlideData.slideshow.loadedItems[itemId] = itemData;
-
-            // Import Images
-            coreSlideData.slideshow.loadedItems[itemId].Images = { 
-                Backdrop: await buildImageUrl(itemData, "Backdrop", 0, coreSlideData.jellyfinData.serverAddress, coreSlideSettings.quality.backdrop),
-                Logo: await buildImageUrl(itemData, "Logo", undefined, coreSlideData.jellyfinData.serverAddress, coreSlideSettings.quality.logo)
-            };
-
-            return itemData;
-        } catch (error) {
-            console.error(`Error fetching details for item ${itemId}:`, error);
-            return null;
-        }
+        });
     }
 
     // Change slide trigger
@@ -357,58 +361,54 @@ function initCoreSlider() {
         }
     }
 
-    async function loadDataSlides() {
+    function loadDataSlides() {
         try {
             coreSlideData.slideshow.isLoading = true;
 
-            let itemIds = [];
-            if ( coreSlideSettings.fileNameLocation ) {
-                itemIds = await loadDataList();
-            } else {
-                itemIds = await randomSlides();
-            }
+            (coreSlideSettings.fileNameLocation ? loadDataList() : randomSlides()).then(function(itemIds) {
+                coreSlideData.slideshow.itemIds = itemIds;
+                coreSlideData.slideshow.totalItems = itemIds.length;
 
-            coreSlideData.slideshow.itemIds = itemIds;
-            coreSlideData.slideshow.totalItems = itemIds.length;
+                // Create the core slider
+                const { coreSlide, createSlides, createDots, buttonNext, buttonPrevious } = createSliderShell();
 
-            // Create the core slider
-            const { coreSlide, createSlides, createDots, buttonNext, buttonPrevious } = createSliderShell();
+                // Load each slide (one by one)
+                for (let i = 0; i < itemIds.length; i++) {
+                    fetchItemDetails(itemIds[i]).then(function(response) {
+                        const getItem = response;
+                        if ( !getItem ) { return };
+        
+                        const slide = createSlideElement(getItem, i);
+                        const dot = createDotElement(i);
+                        createSlides.appendChild(slide);
+                        createDots.appendChild(dot);
+        
+                        // Pre-load the next image if the current slide is the first
+                        if ( i === 1 ) { preloadNextSlideImage(i - 1); }
+                    });
+                }
 
-            // Load each slide (one by one)
-            for (let i = 0; i < itemIds.length; i++) {
-                await fetchItemDetails(itemIds[i]);
-                const getItem = coreSlideData.slideshow.loadedItems[itemIds[i]];
-                if ( !getItem ) { continue };
+                // Arrows
+                if ( buttonNext ) {
+                    buttonNext.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex + 1); };
+                }
+                if ( buttonPrevious ) {
+                    buttonPrevious.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex - 1); };
+                }
 
-                const slide = createSlideElement(getItem, i);
-                const dot = createDotElement(i);
-                createSlides.appendChild(slide);
-                createDots.appendChild(dot);
+                // Mouse/touch events
+                if ( coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
+                    coreSliderEventMouse(createSlides);
+                }
 
-                // Pre-load the next image if the current slide is the first
-                if ( i === 1 ) { preloadNextSlideImage(i - 1); }
-            }
+                // Autoplay
+                startAutoplay();
 
-            // Arrows
-            if ( buttonNext ) {
-                buttonNext.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex + 1); };
-            }
-            if ( buttonPrevious ) {
-                buttonPrevious.onclick = function() { changeSlide(coreSlideData.slideshow.currentSlideIndex - 1); };
-            }
-
-            // Mouse/touch events
-            if ( coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
-                coreSliderEventMouse(createSlides);
-            }
-
-            // Autoplay
-            startAutoplay();
-
-            // TV Navigation
-            if ( coreSlideData.jellyfinData.deviceLayout === 'tv' ) {
-                initSliderNavigation(coreSlide, createSlides);
-            }
+                // TV Navigation
+                if ( coreSlideData.jellyfinData.deviceLayout === 'tv' ) {
+                    initSliderNavigation(coreSlide, createSlides);
+                }
+            });
         } catch (error) {
             console.error("Error loading slideshow data:", error);
         } finally {
@@ -457,6 +457,13 @@ function initCoreSlider() {
         coreSlide.id = 'core-slider';
         if ( coreSlideSettings.theme !== 'default' ) { coreSlide.classList.add(`core-slider-${coreSlideSettings.theme}`); }
         if ( !coreSlideSettings.animationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' || !coreSlideSettings.animationEffect ) { coreSlide.classList.add('core-slider-no-animation'); }
+
+        // Add custom height to prevent menu from covering the slider
+        if ( coreSlideSettings.theme === 'default' ) {
+            let skinHeader = document.querySelector('.skinHeader');
+            let headerHeight = skinHeader.offsetHeight;
+            document.documentElement.style.setProperty('--slider-height-header', headerHeight + 'px');
+        }
 
         const createSlides = document.createElement('div');
         createSlides.className = 'core-slider-slides';
@@ -601,25 +608,31 @@ function initCoreSlider() {
                 createSlideButtonPlay.type = `button`;
                 createSlideButtonPlay.className = `core-slide-button-play`;
                 createSlideButtonPlay.innerHTML = `<span class="material-icons play_arrow" aria-hidden="true"></span> ${coreSlideSettings.button.play.name ? `<p>${coreSlideSettings.button.play.name}</p>` : '' }`;
-                createSlideButtonPlay.onclick = async function() {
+                createSlideButtonPlay.onclick = function() {
                     try {
                         // Get the session id
-                        const sessionRes = await fetch(`${coreSlideData.jellyfinData.serverAddress}/Sessions?controllableByUserId=${coreSlideData.jellyfinData.userId}`, {
+                        fetch(`${coreSlideData.jellyfinData.serverAddress}/Sessions?controllableByUserId=${coreSlideData.jellyfinData.userId}`, {
                             headers: getAuthHeader()
-                        });
-                        const sessions = await sessionRes.json();
-    
-                        // Find the session of your deviceId
-                        const currentSession = sessions.find((session) => session.DeviceId === coreSlideData.jellyfinData.deviceId);
-                        if ( !currentSession ) {
-                            console.warn('Session not found');
-                            return;
-                        }
-    
-                        // Play
-                        await fetch(`${coreSlideData.jellyfinData.serverAddress}/Sessions/${currentSession.Id}/Playing?playCommand=PlayNow&itemIds=${getItem.Id}`, {
-                            method: 'POST',
-                            headers: getAuthHeader()
+                        }).then(function(response) {
+                            return response.json();
+                        }).then(function(sessions) {
+                            // Find the session of your deviceId
+                            const currentSession = sessions.find((session) => session.DeviceId === coreSlideData.jellyfinData.deviceId);
+
+                            if ( !currentSession ) {
+                                console.warn('Session not found');
+                                return;
+                            }
+
+                            return currentSession;
+                        }).then(function(session) {
+                            // Play
+                            return fetch(`${coreSlideData.jellyfinData.serverAddress}/Sessions/${session.Id}/Playing?playCommand=PlayNow&itemIds=${getItem.Id}`, {
+                                method: 'POST',
+                                headers: getAuthHeader()
+                            });
+                        }).catch(function(error) {
+                            console.error(`Failed play session: `, error);
                         });
                     } catch (error) {
                         console.error('Play error:', error);
@@ -650,23 +663,22 @@ function initCoreSlider() {
                 createSlideButtonFavorite.classList.add(`core-slide-button-favorite`);
                 if ( isFavorite ) { createSlideButtonFavorite.classList.add("core-slide-button-favorite-active"); }
                 createSlideButtonFavorite.innerHTML = `<span class="material-icons favorite_outline" aria-hidden="true"></span> ${coreSlideSettings.button.favorite.name ? `<p>${coreSlideSettings.button.favorite.name}</p>` : '' }`;
-                createSlideButtonFavorite.onclick = async function() {
+                createSlideButtonFavorite.onclick = function() {
                     try {
                         const method = isFavorite ? "DELETE" : "POST";
-                        const response = await fetch(`${coreSlideData.jellyfinData.serverAddress}/Users/${coreSlideData.jellyfinData.userId}/FavoriteItems/${getItem.Id}`, {
+
+                        fetch(`${coreSlideData.jellyfinData.serverAddress}/Users/${coreSlideData.jellyfinData.userId}/FavoriteItems/${getItem.Id}`, {
                             method,
                             headers: getAuthHeader()
+                        }).then(function(response) {
+                            // Button classes
+                            isFavorite != isFavorite;
+                            createSlideButtonFavorite.classList.toggle("core-slide-button-favorite-active");
+                            createSlideButtonFavorite.querySelector('span').classList.toggle('favorite_outline');
+                            createSlideButtonFavorite.querySelector('span').classList.toggle('favorite');
+                        }).catch(function(error) {
+                            throw new Error(`Failed to toggle favorite: ${error.statusText}`);
                         });
-
-                        if ( !response.ok ) {
-                            throw new Error(`Failed to toggle favorite: ${response.statusText}`);
-                        }
-
-                        // Button classes
-                        isFavorite != isFavorite;
-                        createSlideButtonFavorite.classList.toggle("core-slide-button-favorite-active");
-                        createSlideButtonFavorite.querySelector('span').classList.toggle('favorite_outline');
-                        createSlideButtonFavorite.querySelector('span').classList.toggle('favorite');
                     } catch (error) {
                         console.error("Error toggling favorite:", error);
                     }

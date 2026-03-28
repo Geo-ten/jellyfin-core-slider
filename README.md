@@ -64,15 +64,17 @@ Go to the **JS Injector** from your dashboard, and create a new script.
 (function() {
     'use strict';
 
+    const CDN = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main';
+
     // Core Slider CSS
     const styleCoreSlider = document.createElement('link');
     styleCoreSlider.rel = 'stylesheet';
-    styleCoreSlider.href = 'https://raw.githubusercontent.com/Geo-ten/jellyfin-core-slider/main/assets/css/core-slider.css';
+    styleCoreSlider.href = `${CDN}/assets/css/core-slider.css`;
 
     // Core Slider JS
     const scriptCoreSlider = document.createElement('script');
     scriptCoreSlider.async = true;
-    scriptCoreSlider.src = 'https://raw.githubusercontent.com/Geo-ten/jellyfin-core-slider/main/assets/js/core-slider.js';
+    scriptCoreSlider.src = `${CDN}/assets/js/core-slider.js`;
 
     // Custom core slider settings
     const scriptCoreSliderSettings = document.createElement('script');
@@ -113,7 +115,7 @@ Check the checkbox **Enabled** and **Requires Authentication**
 
 And click **Save**
 
-If you don't want files directly from Github RAW - Download and copy the files into your Jellyfin Web assets folder, and change this lines:
+If you don't want files directly from jsDelivr - Download and copy the files into your Jellyfin Web assets folder, and change this lines:
 
 ```javascript
     // Core Slider CSS

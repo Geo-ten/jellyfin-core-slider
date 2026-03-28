@@ -2,8 +2,8 @@
 
 A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile, and LG WebOS TV.
 
-> Tested on Jellyfin **10.10.7** - not tested on newer versions.  
-> Compatible with **ES2017+** (Older Smart TV browsers).
+> Tested on Jellyfin **10.10.7** and newer verions **10.11.***.  
+> Compatible with **ES2015+** (Support older Smart TV browsers).
 
 ---
 
@@ -44,6 +44,10 @@ To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](htt
    - **URL** (for Jellyfin 10.10.7):
      ```
      https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.10/manifest.json
+     ```
+   - **URL** (for Jellyfin 10.11.*):
+     ```
+     https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json
      ```
 3. Click **Save**, go to **Catalog**, find **JavaScript Injector**, and click **Install**
 4. Restart your Jellyfin server
@@ -117,11 +121,10 @@ And click **Save**
 
 If you don't want files directly from jsDelivr - Download and copy the files into your Jellyfin Web assets folder, and change this lines:
 
+(Recommended path '/assets/css|js/core-slider.css|js')
+
 ```javascript
-    // Core Slider CSS
-    styleCoreSlider.href = './assets/css/core-slider.css';
-    // Core Slider JS
-    scriptCoreSlider.src = './assets/js/core-slider.js';
+   const CDN = '.';
 ```
 
 ---

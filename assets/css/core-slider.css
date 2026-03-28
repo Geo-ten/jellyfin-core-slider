@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.0
+    Version: 1.1.1.1
 */
 
 :root {
@@ -26,9 +26,9 @@
     --slider-color-black: #000000;
     --slider-color-black-transparent: #00000050;
     --slider-color-black-dark-transparent: #000000b0;
-    --slider-height-desktop: 650px;
+    --slider-height-desktop: 700px;
     --slider-height-mobile: 400px;
-    --slider-height-tv: 720px;
+    --slider-height-tv: 740px;
     --slider-height-wide: 80vh;
     --slider-transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
     --slider-transition-duration: 350ms;
@@ -242,7 +242,7 @@
 }
 
 .core-slide .core-slide-logo {
-    margin-top: 4em;
+    margin-top: 7em;
 }
 
 .core-slide .core-slide-logo img {
@@ -429,8 +429,10 @@
 }
 
 .core-slider-dots .core-slider-dot.core-slider-dot-active {
-    transform: scale(1.5);
+    transform: scale(1.15);
     opacity: 1;
+    width: 22px;
+    border-radius: var(--slider-border-radius-min);
 }
 
 /* Mobile */
@@ -500,21 +502,41 @@
     height: var(--slider-height-tv);
 }
 
+.layout-tv .core-slide {
+    justify-content: center;
+}
+
+.layout-tv .core-slide .core-slide-logo {
+    margin-top: 0;
+}
+
+.layout-tv .core-slide .core-slide-info div:not(:last-child) {
+    padding-right: 19px;
+}
+
 .layout-tv .core-slide .core-slide-info div:not(:last-child)::after {
     width: 10px;
     height: 10px;
 }
 
 .layout-tv .core-slide .core-slide-info p {
-    font-size: 28px;
-}
-
-.layout-tv .core-slide .core-slide-info p span {
     font-size: 24px;
 }
 
+.layout-tv .core-slide .core-slide-info p span {
+    font-size: 26px;
+}
+
 .layout-tv .core-slide .core-slide-overview p {
-    font-size: larger;
+    font-size: 27px;
+}
+
+/* TV - Slide Dots */
+.layout-tv .core-slider-dots {
+    left: initial;
+    transform: translateX(0);
+    right: 1em;
+    bottom: 2.5em;
 }
 
 /* Theme - Wide */

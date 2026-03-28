@@ -242,7 +242,7 @@ function initCoreSlider() {
         const itemId = item.Id;
         let tag = null;
 
-        if (imageType === "Backdrop") {
+        if ( imageType === "Backdrop" ) {
             if ( item.BackdropImageTags && Array.isArray(item.BackdropImageTags) && item.BackdropImageTags.length > 0 ) {
                 const backdropIndex = index !== undefined ? index : 0;
                 if (backdropIndex < item.BackdropImageTags.length) {
@@ -259,18 +259,22 @@ function initCoreSlider() {
         }
 
         let baseUrl;
-        if (index !== undefined) {
+        // Limit the width for TV (Optimized for pre-load)
+        let maxWidth = coreSlideData.jellyfinData.deviceLayout === 'tv' ? `&maxWidth=1280` : `&maxWidth=1785`;
+        if ( imageType === "Logo" ) { maxWidth = `&maxWidth=400`; }
+
+        if ( index !== undefined ) {
             baseUrl = `${serverAddress}/Items/${itemId}/Images/${imageType}/${index}`;
         } else {
             baseUrl = `${serverAddress}/Items/${itemId}/Images/${imageType}`;
         }
 
-        if (tag) {
+        if ( tag ) {
             const qualityParam = quality !== undefined ? `&quality=${quality}` : "";
-            return `${baseUrl}?tag=${tag}${qualityParam}`;
+            return `${baseUrl}?tag=${tag}${qualityParam}${maxWidth}`;
         } else {
             const qualityParam = quality !== undefined ? quality : coreSlideSettings.quality.backdrop;
-            return `${baseUrl}?quality=${qualityParam}`;
+            return `${baseUrl}?quality=${qualityParam}${maxWidth}`;
         }
     }
 
@@ -357,17 +361,30 @@ function initCoreSlider() {
 
         coreSlideData.slideshow.preloadImages.push(nextIndex);
 
-        nextSlide.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+        function getImage(img) {
             if ( !img.src ) { return; }
-            img.loading = 'eager';
+
+            if ( coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
+                img.loading = 'eager';
+            } else {
+                // Load, cache and replace the new image
+                const preload = new Image();
+                preload.onload = function() {
+                    img.src = preload.src;
+                };
+                preload.src = img.src;
+            }
+        }
+
+        nextSlide.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+            getImage(img);
         });
 
         // Pre-load at the init the second slide image
         if ( nextIndex === 0 ) { 
             coreSlideData.slideshow.preloadImages.push(nextIndex + 1); 
             slides[nextIndex + 1].querySelectorAll('img[loading="lazy"]').forEach(function(img) {
-                if ( !img.src ) { return; }
-                img.loading = 'eager';
+                getImage(img);
             });
         }
     }
@@ -528,12 +545,12 @@ function initCoreSlider() {
 
         const createSlideBackdrop = document.createElement('div');
         createSlideBackdrop.className = 'core-slide-backdrop';
-        createSlideBackdrop.innerHTML = `<img loading="lazy" decoding="async" src="${getItem.Images.Backdrop}" alt="${getItem.Name} - Backdrop" width="1800" height="810" />`;
+        createSlideBackdrop.innerHTML = `<img loading="lazy" decoding="${index === 0 ? 'sync' : 'async'}" src="${getItem.Images.Backdrop}" alt="${getItem.Name} - Backdrop" width="1800" height="810" />`;
         createSlide.appendChild(createSlideBackdrop);
 
         const createSlideLogo = document.createElement('div');
         createSlideLogo.className = 'core-slide-logo';
-        createSlideLogo.innerHTML = `<img loading="lazy" decoding="async" src="${getItem.Images.Logo}" alt="${getItem.Name} - Logo" width="296" height="110" />`;
+        createSlideLogo.innerHTML = `<img loading="lazy" decoding="${index === 0 ? 'sync' : 'async'}" src="${getItem.Images.Logo}" alt="${getItem.Name} - Logo" width="296" height="110" />`;
         createSlide.appendChild(createSlideLogo);
 
         const createSlideInfo = document.createElement('div');

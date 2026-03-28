@@ -1,0 +1,81 @@
+/* Root */
+:root {
+    --bar-height: 2.5em;
+    --side-padding: 3.33%;
+}
+
+/* skinHeader */
+.skinHeader {
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-radius: 0;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Fix for TV header */
+.layout-tv #reactRoot > div:nth-child(3) {
+    container-name: skinHeader;
+    container-type: size;
+    height: var(--bar-height);
+}
+
+.layout-tv .headerTop {
+    padding: 0 0.3em;
+    max-height: var(--bar-height);
+}
+
+.layout-tv .sectionTabs .emby-tab-button {
+    display: inline-flex;
+    margin: 0 0.5em;
+    padding: 0 1em;
+    height: 2.5em;
+    font-weight: 400;
+}
+
+.layout-tv .sectionTabs {
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-align-self: center;
+    align-self: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    /* this collapses the section tabs expanded earlier than the default 100em max-width */
+    margin-top: calc(-1 * var(--bar-height));
+    position: relative;
+    width: auto;
+    font-size: 100%;
+}
+
+/* this fixes the header like on desktop on larger tablet screens */
+.layout-tv .headroom--unpinned {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+}
+
+@media all and (min-width: 768px) {
+    .headerTabs {
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-align-self: center;
+        align-self: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        margin-top: -55px;
+        position: relative;
+        width: auto;
+    }
+}
+
+/* .skinHeader-withBackground.osdHeader */
+.skinHeader-withBackground.osdHeader {
+    border: 0;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    height: auto;
+    pointer-events: none;
+    position: relative;
+    transition: opacity .3sease-out;
+    z-index: 1;
+}

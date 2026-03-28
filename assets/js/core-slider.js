@@ -1,5 +1,8 @@
+// Slider uuid
+const coreSlideId = "3a2c88a1-ed97-43a0-8425-36985ca4491a";
+
 // Slider static settings
-const coreSlideSettings = {
+let coreSlideSettings = {
     animationEffectTV: true,
     animationEffect: true,
     fileNameLocation: null,
@@ -54,41 +57,6 @@ const coreSlideData = {
         isHidden: false,
         elements: {}
     },
-};
-
-// User Override Settings
-if ( coreSlider ) {
-    if ( coreSlider.animationEffectTV !== null ) { coreSlideSettings.animationEffectTV = coreSlider.animationEffectTV; }
-    if ( coreSlider.animationEffect !== null ) { coreSlideSettings.animationEffect = coreSlider.animationEffect; }
-    if ( coreSlider.fileNameLocation ) { coreSlideSettings.fileNameLocation = coreSlider.fileNameLocation; }
-    if ( coreSlider.qualityBackdrop ) { coreSlideSettings.quality.backdrop = coreSlider.qualityBackdrop; }
-    if ( coreSlider.qualityLogo ) { coreSlideSettings.quality.logo = coreSlider.qualityLogo ;}
-    if ( coreSlider.maxItems ) { coreSlideSettings.maxItems = coreSlider.maxItems; }
-    if ( coreSlider.maxOverviewLength ) { coreSlideSettings.maxOverviewLength = coreSlider.maxOverviewLength; }
-    if ( coreSlider.searchType ) { coreSlideSettings.searchType = coreSlider.searchType; }
-    if ( coreSlider.slideButtonPlay ) {
-        coreSlideSettings.button.play.name = coreSlider.slideButtonPlay.name;
-        coreSlideSettings.button.play.enabled = coreSlider.slideButtonPlay.enabled;
-    }
-    if ( coreSlider.slideButtonInfo ) {
-        coreSlideSettings.button.info.name = coreSlider.slideButtonInfo.name;
-        coreSlideSettings.button.info.enabled = coreSlider.slideButtonInfo.enabled;
-    }
-    if ( coreSlider.slideButtonFavorite ) { 
-        coreSlideSettings.button.favorite.name = coreSlider.slideButtonFavorite.name;
-        coreSlideSettings.button.favorite.enabled = coreSlider.slideButtonFavorite.enabled;
-    }
-    if ( coreSlider.slideInterval ) { 
-        coreSlideSettings.slideInterval = coreSlider.slideInterval;
-        coreSlideData.slideshow.slideInterval = coreSlider.slideInterval;
-    }
-    if ( coreSlider.theme ) { coreSlideSettings.theme = coreSlider.theme; }
-    if ( coreSlider.retryInterval ) { coreSlideSettings.retryInterval = coreSlider.retryInterval; }
-    if ( coreSlider.enableInfoPremiereDate !== null ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
-    if ( coreSlider.enableInfoGenre !== null ) { coreSlideSettings.info.genre = coreSlider.enableInfoGenre; }
-    if ( coreSlider.enableInfoAgeRating !== null ) { coreSlideSettings.info.ageRating = coreSlider.enableInfoAgeRating; }
-    if ( coreSlider.enableInfoRuntime !== null ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
-    if ( coreSlider.enableInfoStarRating !== null ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
 };
 
 function initCoreSlider() {
@@ -1082,4 +1050,74 @@ function initCoreSlider() {
     initVisibilityObserver();
 }
 
-initCoreSlider();
+if ( ApiClient.getPluginConfiguration(coreSlideId) ) {
+    ApiClient.getPluginConfiguration(coreSlideId).then(function(config) {
+        coreSlideSettings = {
+            animationEffectTV: config.AnimationEffectTV,
+            animationEffect: config.AnimationEffect,
+            fileNameLocation: config.FileNameLocation,
+            quality: {
+                backdrop: config.QualityBackdrop,
+                logo: config.QualityLogo,
+            },
+            maxItems: config.MaxItems,
+            maxOverviewLength: config.MaxOverviewLength,
+            slideInterval: config.SlideInterval,
+            retryInterval: config.RetryInterval,
+            theme: config.Theme,
+            button: {
+                play: { name: config.ButtonPlayName, enabled: config.ButtonPlayEnabled },
+                info: { name: config.ButtonInfoName, enabled: config.ButtonInfoEnabled },
+                favorite: { name: config.ButtonFavoriteName, enabled: config.ButtonFavoriteEnabled },
+            },
+            searchType: config.SearchType,
+            info: {
+                premiereDate: config.InfoPremiereDate,
+                genre: config.InfoGenre,
+                ageRating: config.InfoAgeRating,
+                runtime: config.InfoRuntime,
+                starRating: config.InfoStarRating,
+            },
+        };
+    
+        // Start the slider
+        initCoreSlider();
+    });
+} else {
+    // User Override Settings
+    if ( coreSlider ) {
+        if ( coreSlider.animationEffectTV !== null ) { coreSlideSettings.animationEffectTV = coreSlider.animationEffectTV; }
+        if ( coreSlider.animationEffect !== null ) { coreSlideSettings.animationEffect = coreSlider.animationEffect; }
+        if ( coreSlider.fileNameLocation ) { coreSlideSettings.fileNameLocation = coreSlider.fileNameLocation; }
+        if ( coreSlider.qualityBackdrop ) { coreSlideSettings.quality.backdrop = coreSlider.qualityBackdrop; }
+        if ( coreSlider.qualityLogo ) { coreSlideSettings.quality.logo = coreSlider.qualityLogo ;}
+        if ( coreSlider.maxItems ) { coreSlideSettings.maxItems = coreSlider.maxItems; }
+        if ( coreSlider.maxOverviewLength ) { coreSlideSettings.maxOverviewLength = coreSlider.maxOverviewLength; }
+        if ( coreSlider.searchType ) { coreSlideSettings.searchType = coreSlider.searchType; }
+        if ( coreSlider.slideButtonPlay ) {
+            coreSlideSettings.button.play.name = coreSlider.slideButtonPlay.name;
+            coreSlideSettings.button.play.enabled = coreSlider.slideButtonPlay.enabled;
+        }
+        if ( coreSlider.slideButtonInfo ) {
+            coreSlideSettings.button.info.name = coreSlider.slideButtonInfo.name;
+            coreSlideSettings.button.info.enabled = coreSlider.slideButtonInfo.enabled;
+        }
+        if ( coreSlider.slideButtonFavorite ) { 
+            coreSlideSettings.button.favorite.name = coreSlider.slideButtonFavorite.name;
+            coreSlideSettings.button.favorite.enabled = coreSlider.slideButtonFavorite.enabled;
+        }
+        if ( coreSlider.slideInterval ) { 
+            coreSlideSettings.slideInterval = coreSlider.slideInterval;
+            coreSlideData.slideshow.slideInterval = coreSlider.slideInterval;
+        }
+        if ( coreSlider.theme ) { coreSlideSettings.theme = coreSlider.theme; }
+        if ( coreSlider.retryInterval ) { coreSlideSettings.retryInterval = coreSlider.retryInterval; }
+        if ( coreSlider.enableInfoPremiereDate !== null ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
+        if ( coreSlider.enableInfoGenre !== null ) { coreSlideSettings.info.genre = coreSlider.enableInfoGenre; }
+        if ( coreSlider.enableInfoAgeRating !== null ) { coreSlideSettings.info.ageRating = coreSlider.enableInfoAgeRating; }
+        if ( coreSlider.enableInfoRuntime !== null ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
+        if ( coreSlider.enableInfoStarRating !== null ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
+    };
+
+    initCoreSlider();
+}

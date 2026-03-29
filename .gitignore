@@ -1,2 +1,6 @@
 /versions
-/Jellyfin.Plugin.CoreSlider
+/Jellyfin.Plugin.CoreSlider/obj
+/Jellyfin.Plugin.CoreSlider/bin
+/Jellyfin.Plugin.CoreSlider/release.yml
+/Jellyfin.Plugin.CoreSlider/meta.json
+/jellyfin-core-slider.sln

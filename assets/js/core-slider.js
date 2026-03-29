@@ -1062,40 +1062,38 @@ function initCoreSlider() {
     initVisibilityObserver();
 }
 
-if ( ApiClient.getPluginConfiguration(coreSlideId) ) {
-    ApiClient.getPluginConfiguration(coreSlideId).then(function(config) {
-        coreSlideSettings = {
-            animationEffectTV: config.AnimationEffectTV,
-            animationEffect: config.AnimationEffect,
-            fileNameLocation: config.FileNameLocation,
-            quality: {
-                backdrop: config.QualityBackdrop,
-                logo: config.QualityLogo,
-            },
-            maxItems: config.MaxItems,
-            maxOverviewLength: config.MaxOverviewLength,
-            slideInterval: config.SlideInterval,
-            retryInterval: config.RetryInterval,
-            theme: config.Theme,
-            button: {
-                play: { name: config.ButtonPlayName, enabled: config.ButtonPlayEnabled },
-                info: { name: config.ButtonInfoName, enabled: config.ButtonInfoEnabled },
-                favorite: { name: config.ButtonFavoriteName, enabled: config.ButtonFavoriteEnabled },
-            },
-            searchType: config.SearchType,
-            info: {
-                premiereDate: config.InfoPremiereDate,
-                genre: config.InfoGenre,
-                ageRating: config.InfoAgeRating,
-                runtime: config.InfoRuntime,
-                starRating: config.InfoStarRating,
-            },
-        };
+ApiClient.getPluginConfiguration(coreSlideId).then(function(config) {
+    coreSlideSettings = {
+        animationEffectTV: config.AnimationEffectTV,
+        animationEffect: config.AnimationEffect,
+        fileNameLocation: config.FileNameLocation,
+        quality: {
+            backdrop: config.QualityBackdrop,
+            logo: config.QualityLogo,
+        },
+        maxItems: config.MaxItems,
+        maxOverviewLength: config.MaxOverviewLength,
+        slideInterval: config.SlideInterval,
+        retryInterval: config.RetryInterval,
+        theme: config.Theme,
+        button: {
+            play: { name: config.ButtonPlayName, enabled: config.ButtonPlayEnabled },
+            info: { name: config.ButtonInfoName, enabled: config.ButtonInfoEnabled },
+            favorite: { name: config.ButtonFavoriteName, enabled: config.ButtonFavoriteEnabled },
+        },
+        searchType: config.SearchType,
+        info: {
+            premiereDate: config.InfoPremiereDate,
+            genre: config.InfoGenre,
+            ageRating: config.InfoAgeRating,
+            runtime: config.InfoRuntime,
+            starRating: config.InfoStarRating,
+        },
+    };
     
-        // Start the slider
-        initCoreSlider();
-    });
-} else {
+    // Start the slider
+    initCoreSlider();
+}).catch(function(error) {
     // User Override Settings
     if ( coreSlider ) {
         if ( coreSlider.animationEffectTV !== null ) { coreSlideSettings.animationEffectTV = coreSlider.animationEffectTV; }
@@ -1130,6 +1128,6 @@ if ( ApiClient.getPluginConfiguration(coreSlideId) ) {
         if ( coreSlider.enableInfoRuntime !== null ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
         if ( coreSlider.enableInfoStarRating !== null ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
     };
-
+    
     initCoreSlider();
-}
+});

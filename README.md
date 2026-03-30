@@ -30,9 +30,9 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 
 ### Requirements
 
-    Core Slider requires the following plugin if your user does not have the right read/write permissions for the Jellyfin app.
+Core Slider requires the following plugin if your user does not have the right read/write permissions for the Jellyfin app.
 
-    - Plugin: [File Transformation](https://github.com/IAmParadox27/jellyfin-plugin-file-transformation)
+- Plugin: [File Transformation](https://github.com/IAmParadox27/jellyfin-plugin-file-transformation)
 
 ---
 
@@ -60,12 +60,20 @@ https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.10/manifest.j
 4. Restart your Jellyfin server.
 5. *(Optional)* Go to **Dashboard > Core Slider** to adjust the settings.
 
+
+## Local Files
+
 If you don't want files directly from jsDelivr.
-Download the latest release core-slider-vX.X.X.zip and copy the files into your Jellyfin Web assets folder, and change from the **Dashboard > Core Slider**:
+
+Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/jellyfin-core-slider/releases) and copy the files into your Jellyfin Web assets folder.
+
+Change from the **Dashboard > Core Slider**:
 
 ```
 Load files from CDN (CSS/JS): Unchecked
 ```
+
+Click **Save**
 
 ---
 ## Configuration
@@ -134,7 +142,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 ## Credits
 
 - Inspired by and partially based on .js of [MakD/Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar)
-- C# Based on [Namo2/InPlayerEpisodePreview](https://github.com/Namo2/InPlayerEpisodePreview)
+- C# Inspired by [Namo2/InPlayerEpisodePreview](https://github.com/Namo2/InPlayerEpisodePreview)
 - Built with ❤ by [Geoten](https://www.geoten.dev)
 
 ---

@@ -75,16 +75,14 @@ function initCoreSlider() {
                 console.log("🔓 User is fully logged in. Loading configuration...");
 
                 if ( typeof window.ApiClient.getPluginConfiguration === 'function' ) {
-                    window.ApiClient.getPluginConfiguration(coreSlideId).then(function(config) {
-                        if ( config ) { applyPluginConfig(config); }
+                    window.ApiClient.getPluginConfiguration(coreSlideId).then(function(data) {
+                        if ( data ) { applyPluginConfig(data); }
                         continueInit();
                     }).catch(function(err) {
-                        console.warn("Core Slider: Failed to load plugin config, using defaults/overrides", err);
-                        applyUserOverrides();
+                        console.warn("Core Slider: Failed to load plugin config, using defaults", err);
                         continueInit();
                     });
                 } else {
-                    applyUserOverrides();
                     continueInit();
                 }
             } else {
@@ -130,42 +128,6 @@ function initCoreSlider() {
         coreSlideSettings.info.ageRating = config.InfoAgeRating;
         coreSlideSettings.info.runtime = config.InfoRuntime;
         coreSlideSettings.info.starRating = config.InfoStarRating;
-    }
-
-    function applyUserOverrides() {
-        if ( typeof coreSlider !== 'undefined' && coreSlider ) {
-            if ( coreSlider.animationEffectTV !== null && coreSlider.animationEffectTV !== undefined ) { coreSlideSettings.animationEffectTV = coreSlider.animationEffectTV; }
-            if ( coreSlider.animationEffect !== null && coreSlider.animationEffect !== undefined ) { coreSlideSettings.animationEffect = coreSlider.animationEffect; }
-            if ( coreSlider.fileNameLocation ) { coreSlideSettings.fileNameLocation = coreSlider.fileNameLocation; }
-            if ( coreSlider.qualityBackdrop ) { coreSlideSettings.quality.backdrop = coreSlider.qualityBackdrop; }
-            if ( coreSlider.qualityLogo ) { coreSlideSettings.quality.logo = coreSlider.qualityLogo ;}
-            if ( coreSlider.maxItems ) { coreSlideSettings.maxItems = coreSlider.maxItems; }
-            if ( coreSlider.maxOverviewLength ) { coreSlideSettings.maxOverviewLength = coreSlider.maxOverviewLength; }
-            if ( coreSlider.searchType ) { coreSlideSettings.searchType = coreSlider.searchType; }
-            if ( coreSlider.slideButtonPlay ) {
-                coreSlideSettings.button.play.name = coreSlider.slideButtonPlay.name;
-                coreSlideSettings.button.play.enabled = coreSlider.slideButtonPlay.enabled;
-            }
-            if ( coreSlider.slideButtonInfo ) {
-                coreSlideSettings.button.info.name = coreSlider.slideButtonInfo.name;
-                coreSlideSettings.button.info.enabled = coreSlider.slideButtonInfo.enabled;
-            }
-            if ( coreSlider.slideButtonFavorite ) { 
-                coreSlideSettings.button.favorite.name = coreSlider.slideButtonFavorite.name;
-                coreSlideSettings.button.favorite.enabled = coreSlider.slideButtonFavorite.enabled;
-            }
-            if ( coreSlider.slideInterval ) { 
-                coreSlideSettings.slideInterval = coreSlider.slideInterval;
-                coreSlideData.slideshow.slideInterval = coreSlider.slideInterval;
-            }
-            if ( coreSlider.theme ) { coreSlideSettings.theme = coreSlider.theme; }
-            if ( coreSlider.retryInterval ) { coreSlideSettings.retryInterval = coreSlider.retryInterval; }
-            if ( coreSlider.enableInfoPremiereDate !== null && coreSlider.enableInfoPremiereDate !== undefined ) { coreSlideSettings.info.premiereDate = coreSlider.enableInfoPremiereDate; }
-            if ( coreSlider.enableInfoGenre !== null && coreSlider.enableInfoGenre !== undefined ) { coreSlideSettings.info.genre = coreSlider.enableInfoGenre; }
-            if ( coreSlider.enableInfoAgeRating !== null && coreSlider.enableInfoAgeRating !== undefined ) { coreSlideSettings.info.ageRating = coreSlider.enableInfoAgeRating; }
-            if ( coreSlider.enableInfoRuntime !== null && coreSlider.enableInfoRuntime !== undefined ) { coreSlideSettings.info.runtime = coreSlider.enableInfoRuntime; }
-            if ( coreSlider.enableInfoStarRating !== null && coreSlider.enableInfoStarRating !== undefined ) { coreSlideSettings.info.starRating = coreSlider.enableInfoStarRating; }
-        }
     }
 
     // Step 2 (Initializes Jellyfin data from ApiClient)
@@ -1087,7 +1049,6 @@ function initCoreSlider() {
         }
 
         if ( coreSlide && coreSlideData.slideshow.hasInitialized ) {
-            // console.log(coreSlideData.slideshow.isHome, ' - isHome  |  ', coreSlideData.slideshow.isHidden, ' - isHidden')
             if ( coreSlideData.slideshow.isHome && !coreSlideData.slideshow.isHidden ) { 
                 coreSlide.classList.remove('core-slider-hidden');
                 document.documentElement.classList.add('html-slider');

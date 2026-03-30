@@ -227,12 +227,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 ## License
 
 <a target="_blank" href="/Geo-ten/jellyfin-core-slider/blob/main/LICENSE">
-    <img src="https://camo.githubusercontent.com/34ad60f034ebedc21db449989367c463968859dff01288a40076d7a3d303c569/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d446f6e27745f42655f415f4469636b2d726564" alt="DBAD License" data-canonical-src="https://img.shields.io/badge/License-Don't_Be_A_Dick-red" style="max-width: 100%;">
+    <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3">
 </a>
 
-This project is licensed under the [DBAD License](https://dbad-license.org/) - same as the original project it derives from.
-
-- Personal use: Allowed
-- Modifications: Allowed (contribute back)
-- Commercial use: Not allowed
-- Redistribution: Not allowed
+This project is licensed under the [GPLv3 License](https://www.gnu.org/licenses/gpl-3.0).

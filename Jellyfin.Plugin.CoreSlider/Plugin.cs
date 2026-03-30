@@ -44,9 +44,9 @@ namespace Jellyfin.Plugin.CoreSlider {
                 var payload = new JObject {
                     ["id"] = Id.ToString(),
                     ["fileNamePattern"] = "index.html",
-                    ["callbackAssembly"] = typeof(IndexHtmlTransformer).Assembly.FullName,
-                    ["callbackClass"] = typeof(IndexHtmlTransformer).FullName,
-                    ["callbackMethod"] = nameof(IndexHtmlTransformer.Transform),
+                    ["callbackAssembly"] = typeof(IndexHtmlHelper).Assembly.FullName,
+                    ["callbackClass"] = typeof(IndexHtmlHelper).FullName,
+                    ["callbackMethod"] = nameof(IndexHtmlHelper.Transform),
                     ["enabled"] = true
                 };
 

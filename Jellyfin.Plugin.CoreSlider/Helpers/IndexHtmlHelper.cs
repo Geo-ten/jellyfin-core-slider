@@ -11,7 +11,7 @@ namespace Jellyfin.Plugin.CoreSlider {
         public string? Contents { get; set; }
     }
 
-    public static class IndexHtmlTransformer {
+    public static class IndexHtmlHelper {
         private const string Comment = "<!-- CoreSlider -->";
 
         public static string Transform(PatchRequestPayload payload) {
@@ -22,26 +22,8 @@ namespace Jellyfin.Plugin.CoreSlider {
                 if ( content.Contains(Comment) ) { return content; }
 
                 var (css, js) = GetInjectionTags();
-
-                // Add CSS before to </head>
-                int head = content.LastIndexOf("</head>", StringComparison.OrdinalIgnoreCase);
-                if ( head != -1 ) {
-                    content = content.Insert(head, css);
-                }
-
-                // Add JS || CSS before </body>
-                int body = content.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
-
-                // Fallback case for CSS
-                if ( body != -1 && head == -1 ) {
-                    content = content.Insert(body, css);
-                }
-
-                if ( body != -1 ) {
-                    content = content.Insert(body, js);
-                }
-
-                return content;
+                
+                return InjectTags(content, css, js);
             } catch {
                 return payload?.Contents ?? string.Empty;
             }
@@ -63,29 +45,45 @@ namespace Jellyfin.Plugin.CoreSlider {
                 return;
             }
 
-            int body = content.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
-            if ( body == -1 ) {
-                logger.LogWarning("Could not find closing body tag in {0}", file);
-                return;
-            }
-
             var (css, js) = GetInjectionTags();
 
-            // Add JS before </body>
-            content = content.Insert(body, js);
+            string modifiedContent = InjectTags(content, css, js, logger);
 
+            // Don't re-write the file if nothing changed
+            if (content.Equals(modifiedContent)) { return; }
+
+            try {
+                File.WriteAllText(file, modifiedContent);
+                logger.LogInformation("Successfully injected Core Slider into {0}", file);
+            } catch (Exception e) {
+                logger.LogError(e, "Encountered exception while writing to {0}", file);
+            }
+        }
+
+        private static string InjectTags(string content, string css, string js, ILogger ? logger = null) {
             // Add CSS before to </head>
             int head = content.LastIndexOf("</head>", StringComparison.OrdinalIgnoreCase);
             if ( head != -1 ) {
                 content = content.Insert(head, css);
             }
 
-            try {
-                File.WriteAllText(file, content);
-                logger.LogInformation("Successfully injected Core Slider into {0}", file);
-            } catch (Exception e) {
-                logger.LogError(e, "Encountered exception while writing to {0}", file);
+            // Add JS || CSS before </body>
+            int body = content.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
+
+            // Fallback case for CSS
+            if ( body != -1 && head == -1 ) {
+                content = content.Insert(body, css);
             }
+
+            if ( body != -1 ) {
+                content = content.Insert(body, js);
+            }
+            
+            if ( body == -1 && head == -1 && logger != null ) {
+                logger.LogWarning("Could not find closing head/body tags");
+            }
+
+            return content;
         }
 
         private static (string css, string js) GetInjectionTags() {
@@ -106,18 +104,27 @@ namespace Jellyfin.Plugin.CoreSlider {
 
             // Configuration CDN 
             var config = Plugin.Instance?.Configuration;
-            bool useCdn = config == null || config.Cdn;
-            string cdn = $"https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main";
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            string configCdnMethod = config?.CdnMethod ?? "JSDelivr";
+            string configJsVersion = config?.LocalJsVersion ?? "1.0.0";
+
+            // Default value JSDelivr
+            string cdn = "https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main";
             string versionSuffix = "";
 
-            if ( !useCdn ) { 
+            if ( configCdnMethod == "Local" ) { 
                 cdn = ".";
-                versionSuffix = $"?v={timestamp}";
+                versionSuffix = $"?v={configJsVersion}";
             }
 
             string cssSource = $"{cdn}/assets/css/core-slider.css{versionSuffix}";
             string jsSource = $"{cdn}/assets/js/core-slider.js{versionSuffix}";
+
+            // Temp RAM (Method)
+            if ( configCdnMethod == "Github" ) {
+                cdn = "/CoreSlider";
+                cssSource = $"{cdn}/core-slider.css";
+                jsSource = $"{cdn}/core-slider.js";
+            }
 
             var link = $"<link rel=\"stylesheet\" href=\"{cssSource}\" />\n";
             var script = $"\n{Comment}\n<script defer src=\"{jsSource}\"></script>\n";

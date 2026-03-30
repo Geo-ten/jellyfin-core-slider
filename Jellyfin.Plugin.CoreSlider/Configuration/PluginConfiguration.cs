@@ -35,6 +35,7 @@ namespace Jellyfin.Plugin.CoreSlider.Configuration {
         public bool InfoStarRating { get; set; } = true;
 
         // Load files from CDN
-        public bool Cdn { get; set; } = true;
+        public string CdnMethod { get; set; } = "JSDelivr";
+        public string LocalJsVersion { get; set; } = "1.0.0";
     }
 }

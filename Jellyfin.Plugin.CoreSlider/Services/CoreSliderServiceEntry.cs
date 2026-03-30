@@ -17,7 +17,7 @@ namespace Jellyfin.Plugin.CoreSlider {
             _logger.LogInformation("Core Slider Entry Point is starting...");
             
             // Direct Injection
-            IndexHtmlTransformer.Direct(_logger);
+            IndexHtmlHelper.Direct(_logger);
 
             // Wait for Jellyfin to loads, then run FileTransformation
             _appLifetime.ApplicationStarted.Register(() => {

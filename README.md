@@ -11,7 +11,7 @@ A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile
 
 ## About
 
-The main goal of this slider was to work on **LG WebOS TV** with full remote control navigation, since [MakD's Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar) already covers Desktop and Mobile very well.
+The main goal of this slider was to work on **LG WebOS TV** with full remote control navigation.
 
 ---
 
@@ -24,141 +24,55 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 - Smart autoplay with bounce direction
 - Autoplay pauses on drag and resets timer on manual navigation
 - Automatic show/hide based on current page
-- Editable settings via JavaScript Injector without edit core files
+- Editable settings via native Jellyfin Plugin Dashboard
 
 ---
 
 ### Requirements
 
-   - Plugin: [JavaScript Injector](https://github.com/n00bcodr/Jellyfin-JavaScript-Injector)
+    Core Slider requires the following plugin if your user does not have the right read/write permissions for the Jellyfin app.
+
+    - Plugin: [File Transformation](https://github.com/IAmParadox27/jellyfin-plugin-file-transformation)
 
 ---
 
 ## Installation
 
-### Step 1 - Install the JavaScript Injector Plugin
+Core Slider can be a standalone Jellyfin plugin.
 
-To inject custom JS/CSS into Jellyfin Web, install the [JavaScript Injector](https://github.com/n00bcodr/Jellyfin-JavaScript-Injector) plugin.
+1. In Jellyfin, go to Dashboard > Plugins > Catalog > ⚙️
+2. Click + and give the repository a name (e.g., "Core Slider Repo").
+3. Set the Repository URL to:
 
-1. In Jellyfin, go to **Dashboard → Plugins → Catalog → ⚙️**
-2. Click **➕** and add a new repository:
-   - **Name**: JavaScript Injector Repo
-   - **URL** (for Jellyfin 10.10.7):
-     ```
-     https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.10/manifest.json
-     ```
-   - **URL** (for Jellyfin 10.11.*):
-     ```
-     https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json
-     ```
-3. Click **Save**, go to **Catalog**, find **JavaScript Injector**, and click **Install**
-4. Restart your Jellyfin server
+Important
 
----
+ - If you are on Jellyfin version 10.11
 
-### Step 2 - Add the slider files
-
-#### How to add Core Slider in your Jellyfin
-
-Go to the **JS Injector** from your dashboard, and create a new script.
-
-- **Script Name**: Core Slider
-
-- **Section** `// Insert your custom JavaScript code here...`: 
-
-```javascript
-(function() {
-    'use strict';
-
-    const CDN = 'https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main';
-
-    // Core Slider CSS
-    const styleCoreSlider = document.createElement('link');
-    styleCoreSlider.rel = 'stylesheet';
-    styleCoreSlider.href = `${CDN}/assets/css/core-slider.css`;
-
-    // Core Slider JS
-    const scriptCoreSlider = document.createElement('script');
-    scriptCoreSlider.async = true;
-    scriptCoreSlider.src = `${CDN}/assets/js/core-slider.js`;
-
-    // Custom core slider settings
-    const scriptCoreSliderSettings = document.createElement('script');
-    scriptCoreSliderSettings.textContent = `
-        const coreSlider = {
-            animationEffectTV: true,
-            animationEffect: true,
-            qualityBackdrop: 60,
-            qualityLogo: 40,
-            fileNameLocation: null,
-            maxOverviewLength: 230,
-            maxItems: 6,
-            searchType: 'Movie,Series',
-            slideInterval: 12000,
-            retryInterval: 1000,
-            theme: 'default',
-            enableInfoPremiereDate: true,
-            enableInfoGenre: true,
-            enableInfoAgeRating: true,
-            enableInfoRuntime: true,
-            enableInfoStarRating: true,
-            slideButtonPlay: { name: 'Play Now', enabled: true },
-            slideButtonInfo: { name: 'Details', enabled: true },
-            slideButtonFavorite: { name: '', enabled: true }
-        };
-    `;
-    
-    // Add CSS to the head
-    document.head.appendChild(styleCoreSlider);
-
-    // Add scripts at the end of the body
-    document.body.appendChild(scriptCoreSliderSettings);
-    document.body.appendChild(scriptCoreSlider);
-})();
+```
+https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.11/manifest.json
 ```
 
-Check the checkbox **Enabled** and **Requires Authentication**
+ - If you are on 10.10.7
+```
+https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.10/manifest.json
+```
 
-And click **Save**
+4. Restart your Jellyfin server.
+5. *(Optional)* Go to **Dashboard > Core Slider** to adjust the settings.
 
-If you don't want files directly from jsDelivr - Download and copy the files into your Jellyfin Web assets folder, and change this lines:
+If you don't want files directly from jsDelivr.
+Download the latest release core-slider-vX.X.X.zip and copy the files into your Jellyfin Web assets folder, and change from the **Dashboard > Core Slider**:
 
-(Recommended path '/assets/css|js/core-slider.css|js')
-
-```javascript
-   const CDN = '.';
+```
+Load files from CDN (CSS/JS): Unchecked
 ```
 
 ---
 ## Configuration
 
-Edit `const coreSlider` at the JavaScript Injector Plugin:
+All configurations can now be managed directly from the **Jellyfin Dashboard**.
+Navigate to **Dashboard > Core Slider** to access the UI settings page.
 
-```javascript
-    const coreSlider = {
-        animationEffectTV: true,  // Keep the same animations effect on TV
-        animationEffect: true,  // Disable or enable animations everywhere
-        qualityBackdrop: 60,  // Backdrop image quality (0-100)
-        qualityLogo: 40,  // Logo image quality (0-100)
-        fileNameLocation: null,  // Path to custom list (null = random items | ex. '/assets/list.txt')
-        maxOverviewLength: 230,  // Max overview text length (characters)
-        maxItems: 6,   // Max number of slides to fetch
-        searchType: 'Movie,Series', // Random searchable items
-        slideInterval: 12000,  // Autoplay interval in ms
-        retryInterval: 1000,  // Retry in ms if client is not available
-        theme: 'default',  // Choose theme 'wide' OR 'default'
-        enableInfoPremiereDate: true,  // Enable in the slide the premiere date
-        enableInfoGenre: true,  // Enable in the slide the genre
-        enableInfoAgeRating: true,  // Enable in the slide the age rating
-        enableInfoRuntime: true,  // Enable in the slide the runtime/seasons
-        enableInfoStarRating: true,  // Enable in the slide the community rating
-        slideButtonPlay: { name: 'Play', enabled: true },  // Enable Play button and change the name
-        slideButtonInfo: { name: '', enabled: true },  // Enable Info button and change the name
-        slideButtonFavorite: { name: '', enabled: true }  // Enable Favorite button and change the name
-    };
-```
-
----
 
 ## Custom Curated List
 
@@ -219,7 +133,8 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 
 ## Credits
 
-- Inspired by and partially based on [MakD/Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar)
+- Inspired by and partially based on .js of [MakD/Jellyfin-Media-Bar](https://github.com/MakD/Jellyfin-Media-Bar)
+- C# Based on [Namo2/InPlayerEpisodePreview](https://github.com/Namo2/InPlayerEpisodePreview)
 - Built with ❤ by [Geoten](https://www.geoten.dev)
 
 ---

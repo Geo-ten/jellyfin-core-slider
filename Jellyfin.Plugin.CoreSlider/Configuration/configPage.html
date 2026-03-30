@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Core Slider</title>
+    </head>
+    <body>
+        <div data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-select,emby-checkbox">
+            <div data-role="content">
+                <div class="content-primary">
+                    <form id="CoreSliderConfigForm">
+
+                        <h2>General</h2>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="maxItems">Max Items</label>
+                            <input type="number" id="maxItems" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="slideInterval">Slide Interval (ms)</label>
+                            <input type="number" id="slideInterval" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="retryInterval">Retry Interval (ms)</label>
+                            <input type="number" id="retryInterval" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="maxOverviewLength">Max Overview Length</label>
+                            <input type="number" id="maxOverviewLength" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="theme">Theme</label>
+                            <select id="theme" is="emby-select">
+                                <option value="default">Default</option>
+                                <option value="wide">Wide</option>
+                            </select>
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="searchType">Search Type</label>
+                            <select id="searchType" is="emby-select">
+                                <option value="Movie,Series">Movies & Series</option>
+                                <option value="Movie">Movies</option>
+                                <option value="Series">Series</option>
+                            </select>
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="fileNameLocation">Custom List File (optional)</label>
+                            <input type="text" id="fileNameLocation" is="emby-input" placeholder="Put your files where Jellyfin app is '..\jellyfin-web\assets\list.txt' e.g. 'assets\list.txt'" />
+                        </div>
+
+                        <h2>Animation</h2>
+
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="animationEffect" is="emby-checkbox" />
+                                <span>Enable Animations Effects Everywhere</span>
+                            </label>
+                        </div>
+
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="animationEffectTV" is="emby-checkbox" />
+                                <span>Enable Animations Effects on TV</span>
+                            </label>
+                        </div>
+
+                        <h2>Quality</h2>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="qualityBackdrop">Backdrop Quality (0-100)</label>
+                            <input type="number" id="qualityBackdrop" is="emby-input" min="0" max="100" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="qualityLogo">Logo Quality (0-100)</label>
+                            <input type="number" id="qualityLogo" is="emby-input" min="0" max="100" />
+                        </div>
+
+                        <h2>Buttons</h2>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="buttonPlayEnabled" is="emby-checkbox" />
+                                <span>Enable Play Button</span>
+                            </label>
+                        </div>
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="buttonPlayName">Play Button Label</label>
+                            <input type="text" id="buttonPlayName" is="emby-input" />
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="buttonInfoEnabled" is="emby-checkbox" />
+                                <span>Enable Info Button</span>
+                            </label>
+                        </div>
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="buttonInfoName">Info Button Label</label>
+                            <input type="text" id="buttonInfoName" is="emby-input" />
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="buttonFavoriteEnabled" is="emby-checkbox" />
+                                <span>Enable Favorite Button</span>
+                            </label>
+                        </div>
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="buttonFavoriteName">Favorite Button Label</label>
+                            <input type="text" id="buttonFavoriteName" is="emby-input" />
+                        </div>
+
+                        <h2>Slide Details</h2>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoPremiereDate" is="emby-checkbox" />
+                                <span>Show Premiere Date</span>
+                            </label>
+                        </div>
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoGenre" is="emby-checkbox" />
+                                <span>Show Genre</span>
+                            </label>
+                        </div>
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoAgeRating" is="emby-checkbox" />
+                                <span>Show Age Rating</span>
+                            </label>
+                        </div>
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoRuntime" is="emby-checkbox" />
+                                <span>Show Runtime</span>
+                            </label>
+                        </div>
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoStarRating" is="emby-checkbox" />
+                                <span>Show Star Rating</span>
+                            </label>
+                        </div>
+
+                        <h2>Load files from CDN (CSS/JS)</h2>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="cdn" is="emby-checkbox" />
+                                <span>Leave it unticked, will load the files from your local environment.<br />
+                                    (Needs manual upload files to "..\jellyfin-web\assets\js|css\core-slider.js|css")
+                                </span>
+                            </label>
+                        </div>
+
+                        <br />
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                const PLUGIN_ID = '3a2c88a1-ed97-43a0-8425-36985ca4491a';
+
+                ApiClient.getPluginConfiguration(PLUGIN_ID).then(function(config) {
+                    document.getElementById('maxItems').value = config.MaxItems;
+                    document.getElementById('slideInterval').value = config.SlideInterval;
+                    document.getElementById('retryInterval').value = config.RetryInterval;
+                    document.getElementById('maxOverviewLength').value = config.MaxOverviewLength;
+                    document.getElementById('theme').value = config.Theme;
+                    document.getElementById('searchType').value = config.SearchType;
+                    document.getElementById('fileNameLocation').value = config.FileNameLocation || '';
+                    document.getElementById('animationEffect').checked = config.AnimationEffect;
+                    document.getElementById('animationEffectTV').checked = config.AnimationEffectTV;
+                    document.getElementById('qualityBackdrop').value = config.QualityBackdrop;
+                    document.getElementById('qualityLogo').value = config.QualityLogo;
+                    document.getElementById('buttonPlayEnabled').checked = config.ButtonPlayEnabled;
+                    document.getElementById('buttonPlayName').value = config.ButtonPlayName;
+                    document.getElementById('buttonInfoEnabled').checked = config.ButtonInfoEnabled;
+                    document.getElementById('buttonInfoName').value = config.ButtonInfoName;
+                    document.getElementById('buttonFavoriteEnabled').checked = config.ButtonFavoriteEnabled;
+                    document.getElementById('buttonFavoriteName').value = config.ButtonFavoriteName;
+                    document.getElementById('infoPremiereDate').checked = config.InfoPremiereDate;
+                    document.getElementById('infoGenre').checked = config.InfoGenre;
+                    document.getElementById('infoAgeRating').checked = config.InfoAgeRating;
+                    document.getElementById('infoRuntime').checked = config.InfoRuntime;
+                    document.getElementById('infoStarRating').checked = config.InfoStarRating;
+                    document.getElementById('cdn').checked = config.Cdn;
+                });
+
+                document.getElementById('CoreSliderConfigForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    ApiClient.getPluginConfiguration(PLUGIN_ID).then(function(config) {
+                        config.MaxItems = parseInt(document.getElementById('maxItems').value);
+                        config.SlideInterval = parseInt(document.getElementById('slideInterval').value);
+                        config.RetryInterval = parseInt(document.getElementById('retryInterval').value);
+                        config.MaxOverviewLength = parseInt(document.getElementById('maxOverviewLength').value);
+                        config.Theme = document.getElementById('theme').value;
+                        config.SearchType = document.getElementById('searchType').value;
+                        config.FileNameLocation = document.getElementById('fileNameLocation').value;
+                        config.AnimationEffect = document.getElementById('animationEffect').checked;
+                        config.AnimationEffectTV = document.getElementById('animationEffectTV').checked;
+                        config.QualityBackdrop = parseInt(document.getElementById('qualityBackdrop').value);
+                        config.QualityLogo = parseInt(document.getElementById('qualityLogo').value);
+                        config.ButtonPlayEnabled = document.getElementById('buttonPlayEnabled').checked;
+                        config.ButtonPlayName = document.getElementById('buttonPlayName').value;
+                        config.ButtonInfoEnabled = document.getElementById('buttonInfoEnabled').checked;
+                        config.ButtonInfoName = document.getElementById('buttonInfoName').value;
+                        config.ButtonFavoriteEnabled = document.getElementById('buttonFavoriteEnabled').checked;
+                        config.ButtonFavoriteName = document.getElementById('buttonFavoriteName').value;
+                        config.InfoPremiereDate = document.getElementById('infoPremiereDate').checked;
+                        config.InfoGenre = document.getElementById('infoGenre').checked;
+                        config.InfoAgeRating = document.getElementById('infoAgeRating').checked;
+                        config.InfoRuntime = document.getElementById('infoRuntime').checked;
+                        config.InfoStarRating = document.getElementById('infoStarRating').checked;
+                        config.Cdn = document.getElementById('cdn').checked;
+
+                        ApiClient.updatePluginConfiguration(PLUGIN_ID, config).then(function() {
+                            Dashboard.processPluginConfigurationUpdateResult();
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </body>
+</html>

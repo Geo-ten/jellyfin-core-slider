@@ -444,27 +444,34 @@ function initCoreSlider() {
             coreSlideData.slideshow.isLoading = true;
 
             (coreSlideSettings.fileNameLocation ? loadDataList() : randomSlides()).then(function(itemIds) {
+                if ( itemIds.length === 0 ) { return; }
+
                 coreSlideData.slideshow.itemIds = itemIds;
                 coreSlideData.slideshow.totalItems = itemIds.length;
 
                 // Create the core slider
                 const { coreSlide, createSlides, createDots, buttonNext, buttonPrevious } = createSliderShell();
 
+                function createItem(item, index) {
+                    if ( !item ) { return };
+    
+                    const slide = createSlideElement(item, index);
+                    const dot = createDotElement(index);
+                    createSlides.appendChild(slide);
+                    createDots.appendChild(dot);
+    
+                    // Pre-load the next image if the current slide is the first
+                    if ( index === 1 ) { preloadNextSlideImage(index - 1); }
+                };
+
                 // Load each slide (one by one)
-                for (let i = 0; i < itemIds.length; i++) {
-                    fetchItemDetails(itemIds[i]).then(function(response) {
-                        const getItem = response;
-                        if ( !getItem ) { return };
-        
-                        const slide = createSlideElement(getItem, i);
-                        const dot = createDotElement(i);
-                        createSlides.appendChild(slide);
-                        createDots.appendChild(dot);
-        
-                        // Pre-load the next image if the current slide is the first
-                        if ( i === 1 ) { preloadNextSlideImage(i - 1); }
+                const items = itemIds.map((id) => fetchItemDetails(id));
+
+                Promise.all(items).then(function(results) {
+                    results.forEach(function(getItem, key) {
+                        createItem(getItem, key);
                     });
-                }
+                });
 
                 // Arrows
                 if ( buttonNext ) {

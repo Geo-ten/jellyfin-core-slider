@@ -23,19 +23,22 @@ namespace Jellyfin.Plugin.CoreSlider {
 
                 var (css, js) = GetInjectionTags();
 
-                int body = content.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
-                if ( body == -1 ) {
-                    // Return nothing
-                    return content;
-                }
-
-                // Add JS before </body>
-                content = content.Insert(body, js);
-
                 // Add CSS before to </head>
                 int head = content.LastIndexOf("</head>", StringComparison.OrdinalIgnoreCase);
                 if ( head != -1 ) {
                     content = content.Insert(head, css);
+                }
+
+                // Add JS || CSS before </body>
+                int body = content.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
+
+                // Fallback case for CSS
+                if ( body != -1 && head == -1 ) {
+                    content = content.Insert(body, css);
+                }
+
+                if ( body != -1 ) {
+                    content = content.Insert(body, js);
                 }
 
                 return content;

@@ -25,6 +25,7 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 - Autoplay pauses on drag and resets timer on manual navigation
 - Automatic show/hide based on current page
 - Editable settings via native Jellyfin Plugin Dashboard
+- Load the files via CDN or Local method
 
 ---
 
@@ -63,7 +64,7 @@ https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.10/manifest.j
 
 ## Local Files
 
-If you don't want files directly from jsDelivr.
+If you don't want files directly from jsDelivr or the Github RAW.
 
 Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/jellyfin-core-slider/releases) and copy the files into your Jellyfin Web assets folder.
 

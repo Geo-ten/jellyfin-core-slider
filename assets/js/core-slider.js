@@ -60,33 +60,52 @@ const coreSlideData = {
     },
 };
 
+function applyPluginConfig(config) {
+    coreSlideSettings.animationEffectTV = config.AnimationEffectTV;
+    coreSlideSettings.animationEffect = config.AnimationEffect;
+    coreSlideSettings.fileNameLocation = config.FileNameLocation;
+    coreSlideSettings.quality.backdrop = config.QualityBackdrop;
+    coreSlideSettings.quality.logo = config.QualityLogo;
+    coreSlideSettings.maxItems = config.MaxItems;
+    coreSlideSettings.maxOverviewLength = config.MaxOverviewLength;
+    coreSlideSettings.slideInterval = config.SlideInterval;
+    coreSlideSettings.retryInterval = config.RetryInterval;
+    coreSlideSettings.theme = config.Theme;
+    coreSlideSettings.button.play.name = config.ButtonPlayName;
+    coreSlideSettings.button.play.enabled = config.ButtonPlayEnabled;
+    coreSlideSettings.button.info.name = config.ButtonInfoName;
+    coreSlideSettings.button.info.enabled = config.ButtonInfoEnabled;
+    coreSlideSettings.button.favorite.name = config.ButtonFavoriteName;
+    coreSlideSettings.button.favorite.enabled = config.ButtonFavoriteEnabled;
+    coreSlideSettings.searchType = config.SearchType;
+    coreSlideSettings.info.premiereDate = config.InfoPremiereDate;
+    coreSlideSettings.info.genre = config.InfoGenre;
+    coreSlideSettings.info.ageRating = config.InfoAgeRating;
+    coreSlideSettings.info.runtime = config.InfoRuntime;
+    coreSlideSettings.info.starRating = config.InfoStarRating;
+};
+
 function initCoreSlider() {
     // Step 1 (Wait for ApiClient to initialize before starting the slideshow)
     function waitForApiClient() {
 
         function check() {
             if ( !window.ApiClient ) {
-                console.log("⏳ ApiClient not available yet. Waiting...");
+                console.log("Core Slider - ApiClient is not available yet. Waiting...");
                 setTimeout(check, coreSlideSettings.retryInterval);
                 return;
             }
 
-            if ( window.ApiClient._currentUser && window.ApiClient._currentUser.Id && window.ApiClient._serverInfo && window.ApiClient._serverInfo.AccessToken ) {
-                console.log("🔓 User is fully logged in. Loading configuration...");
-
-                if ( typeof window.ApiClient.getPluginConfiguration === 'function' ) {
-                    window.ApiClient.getPluginConfiguration(coreSlideId).then(function(data) {
-                        if ( data ) { applyPluginConfig(data); }
-                        continueInit();
-                    }).catch(function(err) {
-                        console.warn("Core Slider: Failed to load plugin config, using defaults", err);
-                        continueInit();
-                    });
-                } else {
+            if ( window.ApiClient._currentUser && window.ApiClient._currentUser.Id && window.ApiClient._serverInfo && window.ApiClient._serverInfo.AccessToken && typeof window.ApiClient.getPluginConfiguration === "function" ) {
+                window.ApiClient.getPluginConfiguration(coreSlideId).then(function(data) {
+                    if ( data ) { applyPluginConfig(data); }
                     continueInit();
-                }
+                }).catch(function(error) {
+                    console.warn("Core Slider - Failed to load plugin config, using defaults values", error);
+                    continueInit();
+                });
             } else {
-                console.log("🔒 Authentication incomplete. Waiting for complete login...");
+                console.log("Core Slider - Authentication is incomplete. Retrying...");
                 setTimeout(check, coreSlideSettings.retryInterval);
             }
         }
@@ -94,46 +113,21 @@ function initCoreSlider() {
         function continueInit() {
             if ( !coreSlideData.slideshow.hasInitialized ) {
                 initCoreData(function() {
-                    console.log("✅ Jellyfin API client initialized successfully");
+                    console.log("Core Slider - Configuration completed.");
                     initCoreDataSlides();
                 });
             } else {
-                console.log("🔄 Slideshow already initialized, skipping");
+                console.log("Core Slider - Already initialized. Skipping...");
             }
         }
 
         check();
     }
 
-    function applyPluginConfig(config) {
-        coreSlideSettings.animationEffectTV = config.AnimationEffectTV;
-        coreSlideSettings.animationEffect = config.AnimationEffect;
-        coreSlideSettings.fileNameLocation = config.FileNameLocation;
-        coreSlideSettings.quality.backdrop = config.QualityBackdrop;
-        coreSlideSettings.quality.logo = config.QualityLogo;
-        coreSlideSettings.maxItems = config.MaxItems;
-        coreSlideSettings.maxOverviewLength = config.MaxOverviewLength;
-        coreSlideSettings.slideInterval = config.SlideInterval;
-        coreSlideSettings.retryInterval = config.RetryInterval;
-        coreSlideSettings.theme = config.Theme;
-        coreSlideSettings.button.play.name = config.ButtonPlayName;
-        coreSlideSettings.button.play.enabled = config.ButtonPlayEnabled;
-        coreSlideSettings.button.info.name = config.ButtonInfoName;
-        coreSlideSettings.button.info.enabled = config.ButtonInfoEnabled;
-        coreSlideSettings.button.favorite.name = config.ButtonFavoriteName;
-        coreSlideSettings.button.favorite.enabled = config.ButtonFavoriteEnabled;
-        coreSlideSettings.searchType = config.SearchType;
-        coreSlideSettings.info.premiereDate = config.InfoPremiereDate;
-        coreSlideSettings.info.genre = config.InfoGenre;
-        coreSlideSettings.info.ageRating = config.InfoAgeRating;
-        coreSlideSettings.info.runtime = config.InfoRuntime;
-        coreSlideSettings.info.starRating = config.InfoStarRating;
-    }
-
     // Step 2 (Initializes Jellyfin data from ApiClient)
     function initCoreData(callback) {
         if ( !window.ApiClient ) {
-            console.warn("⏳ window.ApiClient is not available yet. Retrying...");
+            console.warn("Core Slider - apiClient is not available yet. Retrying...");
             setTimeout(() => initCoreData(callback), coreSlideSettings.retryInterval);
             return;
         }
@@ -160,7 +154,7 @@ function initCoreSlider() {
                 callback();
             }
         } catch (error) {
-            console.error("Error initializing Jellyfin data:", error);
+            console.error("Core Slider - Error initializing ApiClient data:", error);
             setTimeout(() => initCoreData(callback), coreSlideSettings.retryInterval);
         }
     };
@@ -168,13 +162,11 @@ function initCoreSlider() {
     // Step 3 (Initialize the slideshow)
     function initCoreDataSlides() {
         if (coreSlideData.slideshow.hasInitialized) {
-            console.log("⚠️ Slideshow already initialized, skipping");
+            console.log("Core Slider - Already initialized. Skipping...");
             return;
         } else {
             coreSlideData.slideshow.hasInitialized = true;
         }
-
-        console.log("🌟 Initializing Enhanced Jellyfin Slideshow");
 
         // Call loadDataSlides
         loadDataSlides();
@@ -193,18 +185,16 @@ function initCoreSlider() {
         return new Promise(function(resolve, reject) {
             try {
                 if ( !coreSlideData.jellyfinData.accessToken || coreSlideData.jellyfinData.accessToken === "Not Found" ) {
-                    console.warn("Access token not available. Delaying API request...");
+                    console.warn("Core Slider - Access token is not available. Delaying API request...");
                     resolve([]);
                     return;
                 }
 
                 if ( !coreSlideData.jellyfinData.serverAddress || coreSlideData.jellyfinData.serverAddress === "Not Found" ) {
-                    console.warn("Server address not available. Delaying API request...");
+                    console.warn("Core Slider - Server address is not available. Delaying API request...");
                     resolve([]);
                     return;
                 }
-
-                console.log("Fetching random items from server...");
 
                 fetch(`${coreSlideData.jellyfinData.serverAddress}/Items?IncludeItemTypes=${coreSlideSettings.searchType}&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&sortBy=Random&isPlayed=False&enableUserData=true&Limit=${coreSlideSettings.maxItems}&fields=Id,ImageTags,RemoteTrailers`, {
                     headers: getAuthHeader(),
@@ -216,11 +206,11 @@ function initCoreSlider() {
 
                     resolve(filteredItems);
                 }).catch(function(error) {
-                    console.error(`Failed to fetch items: ${error.status} ${error.statusText}`, error);
+                    console.error(`Core Slider - Failed to fetch items: ${error.status} ${error.statusText}`, error);
                     resolve([]);
                 });
             } catch (error) {
-                console.error(`Failed to fetch items: ${response.status} ${response.statusText}`, error);
+                console.error(`Core Slider - Failed to fetch items: ${response.status} ${response.statusText}`, error);
                 resolve([]);
             }
         });
@@ -237,11 +227,11 @@ function initCoreSlider() {
                     const ids = text.split("\n").map((id) => id.trim()).filter((id) => id).slice(1);
                     resolve(ids);
                 }).catch(function(error) {
-                    console.error("list not found or inaccessible. Using random items.", error);
+                    console.error("Core Slider - List not found or is inaccessible.", error);
                     resolve([]);
                 });
             } catch (error) {
-                console.error("Error fetching list:", error);
+                console.error("Core Slider - Error fetching list:", error);
                 resolve([]);
             }
         });
@@ -312,11 +302,11 @@ function initCoreSlider() {
                     
                     resolve(itemData);
                 }).catch(function(error) {
-                    console.error(`Failed to fetch item details: ${error.statusText}`, error);
+                    console.error(`Core Slider - Failed to fetch item details: ${error.statusText}`, error);
                     resolve(null);
                 });
             } catch (error) {
-                console.error(`Error fetching details for item ${itemId}:`, error);
+                console.error(`Core Slider - Error fetching details for item ${itemId}:`, error);
                 resolve(null);
             }
         });
@@ -455,9 +445,11 @@ function initCoreSlider() {
                 if ( coreSlideData.jellyfinData.deviceLayout === 'tv' ) {
                     initSliderNavigation(coreSlide, createSlides);
                 }
+
+                console.log("Core Slider - Succesfuly started.");
             });
         } catch (error) {
-            console.error("Error loading slideshow data:", error);
+            console.error("Core Slider - Error loading slides data:", error);
         } finally {
             coreSlideData.slideshow.isLoading = false;
         }
@@ -667,7 +659,7 @@ function initCoreSlider() {
                             const currentSession = sessions.find((session) => session.DeviceId === coreSlideData.jellyfinData.deviceId);
 
                             if ( !currentSession ) {
-                                console.warn('Session not found');
+                                console.warn('Core Slider - Session not found');
                                 return;
                             }
 
@@ -679,10 +671,10 @@ function initCoreSlider() {
                                 headers: getAuthHeader()
                             });
                         }).catch(function(error) {
-                            console.error(`Failed play session: `, error);
+                            console.error(`Core Slider - Failed play session: `, error);
                         });
                     } catch (error) {
-                        console.error('Play error:', error);
+                        console.error('Core Slider - Play error:', error);
                     }
                 };
                 createSlideButtons.appendChild(createSlideButtonPlay);
@@ -727,7 +719,7 @@ function initCoreSlider() {
                             throw new Error(`Failed to toggle favorite: ${error.statusText}`);
                         });
                     } catch (error) {
-                        console.error("Error toggling favorite:", error);
+                        console.error("Core Slider - Error toggling favorite:", error);
                     }
                 };
                 createSlideButtons.appendChild(createSlideButtonFavorite);

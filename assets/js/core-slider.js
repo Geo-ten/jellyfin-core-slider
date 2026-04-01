@@ -446,7 +446,7 @@ function initCoreSlider() {
                     initSliderNavigation(coreSlide, createSlides);
                 }
 
-                console.log("Core Slider - Succesfuly started.");
+                console.log("Core Slider - Successfully started.");
             });
         } catch (error) {
             console.error("Core Slider - Error loading slides data:", error);

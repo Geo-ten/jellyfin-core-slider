@@ -47,13 +47,13 @@ Core Slider can be a standalone Jellyfin plugin.
 
 Important
 
- - If you are on Jellyfin version 10.11
+ - If you are on Jellyfin version **10.11.x**
 
 ```
 https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.11/manifest.json
 ```
 
- - If you are on 10.10.7
+ - If you are on Jellyfin version **10.10.7**
 ```
 https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.10/manifest.json
 ```

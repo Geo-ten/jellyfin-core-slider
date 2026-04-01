@@ -71,7 +71,7 @@ Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/
 Change from the **Dashboard > Core Slider**:
 
 ```
-Load files from CDN (CSS/JS): Unchecked
+Load app files from CDN/Local > Local
 ```
 
 Click **Save**

@@ -4,7 +4,7 @@ A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile
 
 <img src="/assets/images/logo.png" alt="Logo" width="85%" height="auto" />
 
-> Tested on Jellyfin **10.10.7** and newer verions **10.11.***.  
+> Tested on Jellyfin **10.10.7** and newer verions **10.11.x**.  
 > Compatible with **ES2015+** (Support older Smart TV browsers).
 
 ---

@@ -7,6 +7,10 @@
         <RootNamespace>Jellyfin.Plugin.CoreSlider</RootNamespace>
         <AssemblyName>Jellyfin.Plugin.CoreSlider</AssemblyName>
         <Nullable>enable</Nullable>
+
+        <Version>1.2.0.1</Version>
+        <AssemblyVersion>1.2.0.1</AssemblyVersion>
+        <FileVersion>1.2.0.1</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>

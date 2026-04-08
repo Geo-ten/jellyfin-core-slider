@@ -11,15 +11,17 @@ namespace Jellyfin.Plugin.CoreSlider.Configuration {
         public int MaxItems { get; set; } = 6;
         public int MaxOverviewLength { get; set; } = 230;
         public int SlideInterval { get; set; } = 12000;
-        public int RetryInterval { get; set; } = 1000;
         public string Theme { get; set; } = "default";
+        public string SlideShadow { get; set; } = "#101010";
         public string SearchType { get; set; } = "Movie,Series";
+        public bool LegacySupport { get; set; } = false;
 
         // Quality
         public int QualityBackdrop { get; set; } = 60;
         public int QualityLogo { get; set; } = 40;
 
         // Buttons
+        public string ButtonTheme { get; set; } = "Default";
         public bool ButtonPlayEnabled { get; set; } = true;
         public string ButtonPlayName { get; set; } = "Play Now";
         public bool ButtonInfoEnabled { get; set; } = true;
@@ -33,6 +35,14 @@ namespace Jellyfin.Plugin.CoreSlider.Configuration {
         public bool InfoAgeRating { get; set; } = true;
         public bool InfoRuntime { get; set; } = true;
         public bool InfoStarRating { get; set; } = true;
+
+        // Trailers
+        public bool TrailersEnabled { get; set; } = false;
+        public bool TrailersYoutube { get; set; } = false;
+        public bool TrailersLocal { get; set; } = false;
+        public bool TrailersMuted { get; set; } = false;
+        public int TrailersInterval { get; set; } = 3000;
+
 
         // Load files from CDN
         public string CdnMethod { get; set; } = "JSDelivr";

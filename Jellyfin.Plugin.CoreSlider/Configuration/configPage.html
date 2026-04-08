@@ -22,11 +22,6 @@
                         </div>
 
                         <div class="inputContainer">
-                            <label class="inputLabel inputLabelUnfocused" for="retryInterval">Retry Interval (ms)</label>
-                            <input type="number" id="retryInterval" is="emby-input" />
-                        </div>
-
-                        <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="maxOverviewLength">Max Overview Length</label>
                             <input type="number" id="maxOverviewLength" is="emby-input" />
                         </div>
@@ -37,6 +32,11 @@
                                 <option value="default">Default</option>
                                 <option value="wide">Wide</option>
                             </select>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="slideShadow">Match The Slide Shadow With Your Theme Color</label>
+                            <input type="text" id="slideShadow" is="emby-input" placeholder="#101010" />
                         </div>
 
                         <div class="inputContainer">
@@ -58,14 +58,14 @@
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="animationEffect" is="emby-checkbox" />
-                                <span>Enable Animations Effects Everywhere</span>
+                                <span>Enable Slide Animations Effects (Every Device)</span>
                             </label>
                         </div>
 
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="animationEffectTV" is="emby-checkbox" />
-                                <span>Enable Animations Effects on TV</span>
+                                <span>Enable Slide Animations Effects on TV (Disable This For Higher Performance)</span>
                             </label>
                         </div>
 
@@ -83,12 +83,21 @@
 
                         <h2>Buttons</h2>
 
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="buttonTheme">Button Theme</label>
+                            <select id="buttonTheme" is="emby-select">
+                                <option value="Default">Default</option>
+                                <option value="Netflix">Netflix</option>
+                            </select>
+                        </div>
+
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="buttonPlayEnabled" is="emby-checkbox" />
                                 <span>Enable Play Button</span>
                             </label>
                         </div>
+
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="buttonPlayName">Play Button Label</label>
                             <input type="text" id="buttonPlayName" is="emby-input" />
@@ -100,6 +109,7 @@
                                 <span>Enable Info Button</span>
                             </label>
                         </div>
+
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="buttonInfoName">Info Button Label</label>
                             <input type="text" id="buttonInfoName" is="emby-input" />
@@ -116,6 +126,41 @@
                             <input type="text" id="buttonFavoriteName" is="emby-input" />
                         </div>
 
+                        <h2>Trailers</h2>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersEnabled" is="emby-checkbox" />
+                                <span>Enable Trailers</span>
+                            </label>
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersYoutube" is="emby-checkbox" />
+                                <span>Enable Youtube Trailers</span>
+                            </label>
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersLocal" is="emby-checkbox" />
+                                <span>Enable Local Trailers</span>
+                            </label>
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersMuted" is="emby-checkbox" />
+                                <span>Start Trailers Muted</span>
+                            </label>
+                        </div>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="trailersInterval">Trailers Start interval (ms)</label>
+                            <input type="number" id="trailersInterval" is="emby-input" />
+                        </div>
+
                         <h2>Details</h2>
 
                         <div class="checkboxContainer">
@@ -124,24 +169,28 @@
                                 <span>Show Premiere Date</span>
                             </label>
                         </div>
+
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="infoGenre" is="emby-checkbox" />
                                 <span>Show Genre</span>
                             </label>
                         </div>
+
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="infoAgeRating" is="emby-checkbox" />
                                 <span>Show Age Rating</span>
                             </label>
                         </div>
+
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="infoRuntime" is="emby-checkbox" />
                                 <span>Show Runtime</span>
                             </label>
                         </div>
+
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="infoStarRating" is="emby-checkbox" />
@@ -209,21 +258,27 @@
                 ApiClient.getPluginConfiguration(PLUGIN_ID).then(function(config) {
                     document.getElementById('maxItems').value = config.MaxItems;
                     document.getElementById('slideInterval').value = config.SlideInterval;
-                    document.getElementById('retryInterval').value = config.RetryInterval;
                     document.getElementById('maxOverviewLength').value = config.MaxOverviewLength;
                     document.getElementById('theme').value = config.Theme;
+                    document.getElementById('slideShadow').value = config.SlideShadow;
                     document.getElementById('searchType').value = config.SearchType;
                     document.getElementById('fileNameLocation').value = config.FileNameLocation || '';
                     document.getElementById('animationEffect').checked = config.AnimationEffect;
                     document.getElementById('animationEffectTV').checked = config.AnimationEffectTV;
                     document.getElementById('qualityBackdrop').value = config.QualityBackdrop;
                     document.getElementById('qualityLogo').value = config.QualityLogo;
+                    document.getElementById('buttonTheme').checked = config.ButtonTheme;
                     document.getElementById('buttonPlayEnabled').checked = config.ButtonPlayEnabled;
                     document.getElementById('buttonPlayName').value = config.ButtonPlayName;
                     document.getElementById('buttonInfoEnabled').checked = config.ButtonInfoEnabled;
                     document.getElementById('buttonInfoName').value = config.ButtonInfoName;
                     document.getElementById('buttonFavoriteEnabled').checked = config.ButtonFavoriteEnabled;
                     document.getElementById('buttonFavoriteName').value = config.ButtonFavoriteName;
+                    document.getElementById('trailersEnabled').checked = config.TrailersEnabled;
+                    document.getElementById('trailersYoutube').checked = config.TrailersYoutube;
+                    document.getElementById('trailersLocal').checked = config.TrailersLocal;
+                    document.getElementById('trailersMuted').checked = config.TrailersMuted;
+                    document.getElementById('trailersInterval').value = config.TrailersInterval;
                     document.getElementById('infoPremiereDate').checked = config.InfoPremiereDate;
                     document.getElementById('infoGenre').checked = config.InfoGenre;
                     document.getElementById('infoAgeRating').checked = config.InfoAgeRating;
@@ -246,7 +301,6 @@
                     }).then(response => response.json()).then((data) => {
                         document.getElementById('cacheGithubMessage').classList.remove('hide');
                         setTimeout(() => {
-                            window.location.reload();
                             document.getElementById('cacheGithubMessage').classList.add('hide');
                         }, 1200);
                     }).catch((error) => {
@@ -263,15 +317,16 @@
                     ApiClient.getPluginConfiguration(PLUGIN_ID).then(function(config) {
                         config.MaxItems = parseInt(document.getElementById('maxItems').value);
                         config.SlideInterval = parseInt(document.getElementById('slideInterval').value);
-                        config.RetryInterval = parseInt(document.getElementById('retryInterval').value);
                         config.MaxOverviewLength = parseInt(document.getElementById('maxOverviewLength').value);
                         config.Theme = document.getElementById('theme').value;
+                        config.SlideShadow = document.getElementById('slideShadow').value;
                         config.SearchType = document.getElementById('searchType').value;
                         config.FileNameLocation = document.getElementById('fileNameLocation').value;
                         config.AnimationEffect = document.getElementById('animationEffect').checked;
                         config.AnimationEffectTV = document.getElementById('animationEffectTV').checked;
                         config.QualityBackdrop = parseInt(document.getElementById('qualityBackdrop').value);
                         config.QualityLogo = parseInt(document.getElementById('qualityLogo').value);
+                        config.ButtonTheme = document.getElementById('buttonTheme').value;
                         config.ButtonPlayEnabled = document.getElementById('buttonPlayEnabled').checked;
                         config.ButtonPlayName = document.getElementById('buttonPlayName').value;
                         config.ButtonInfoEnabled = document.getElementById('buttonInfoEnabled').checked;
@@ -283,6 +338,11 @@
                         config.InfoAgeRating = document.getElementById('infoAgeRating').checked;
                         config.InfoRuntime = document.getElementById('infoRuntime').checked;
                         config.InfoStarRating = document.getElementById('infoStarRating').checked;
+                        config.TrailersEnabled = document.getElementById('trailersEnabled').checked;
+                        config.TrailersYoutube = document.getElementById('trailersYoutube').checked;
+                        config.TrailersLocal = document.getElementById('trailersLocal').checked;
+                        config.TrailersMuted = document.getElementById('trailersMuted').checked;
+                        config.TrailersInterval = document.getElementById('trailersInterval').value;
                         config.CdnMethod = document.getElementById('cdnMethod').value;
                         config.LocalJsVersion = document.getElementById('localJsVersion').value;
 

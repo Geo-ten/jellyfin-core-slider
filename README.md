@@ -5,7 +5,7 @@ A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile
 <img src="/assets/images/logo.png" alt="Logo" width="85%" height="auto" />
 
 > Tested on Jellyfin **10.10.7** and newer verions **10.11.x**.  
-> Compatible with **ES2015+** (Support older Smart TV browsers).
+> Compatible with **ES5** (Support older Smart TV browsers - Starting from Web OS 2.0).
 
 ---
 
@@ -24,8 +24,10 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 - Smart autoplay with bounce direction
 - Autoplay pauses on drag and resets timer on manual navigation
 - Automatic show/hide based on current page
+- Trailers (Local and Youtube)
 - Editable settings via native Jellyfin Plugin Dashboard
 - Load the files via CDN or Local method
+- Build-in themes
 
 ---
 
@@ -112,7 +114,7 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 |--------|-----------|-------|---------|
 | Desktop | Arrows + Dots | Mouse drag | ✔ |
 | Mobile | Dots | Touch swipe | ✔ |
-| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ 🆗) | Remote swipe | ✔ |
+| LG WebOS TV | Remote (⬅ ➡ ⬆ ⬇ 🆗 ⏪ ⏩ ▶ ⏸ ⏹) | Remote swipe | ✔ |
 
 ---
 
@@ -125,6 +127,10 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 | ⬆ | Go to header menu |
 | ⬇ | Go to content below slider |
 | 🆗 | Open item details |
+| ▶ or ⏸ | Play / Pause the trailer |
+| ⏪ | Backward the trailer (-15s) |
+| ⏩ | Forward the trailer (+15s) |
+| ⏹ | Un/Mute the trailer |
 
 ---
 

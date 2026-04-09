@@ -1080,7 +1080,7 @@ function initCoreSlider() {
 
             var key = e.keyCode || e.key;
 
-            function stopPrevent(e) {
+            function checkFocusAndPrevent(e) {
                 if ( !sliderHasFocus ) { return false; }
                 e.preventDefault();
                 e.stopImmediatePropagation();

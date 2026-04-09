@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.4
+    Version: 1.1.1.5
 */
 
 :root {
@@ -238,7 +238,7 @@
     left: 0;
     right: 0;
     top: 6%;
-    height: 40%;
+    height: 38%;
     z-index: 1;
 }
 

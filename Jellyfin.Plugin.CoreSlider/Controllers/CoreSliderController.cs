@@ -16,6 +16,15 @@ namespace Jellyfin.Plugin.CoreSlider.Controllers {
         
         private readonly AssetService _assetService = new();
 
+        [HttpGet("config")]
+        [Authorize]
+        public ActionResult GetConfiguration() {
+            var config = Plugin.Instance?.Configuration;
+            if ( config == null ) { return NotFound(); }
+            
+            return Ok(config);
+        }
+
         [HttpGet("core-slider.css")]
         [AllowAnonymous]
         public async Task<ActionResult> GetCss() {

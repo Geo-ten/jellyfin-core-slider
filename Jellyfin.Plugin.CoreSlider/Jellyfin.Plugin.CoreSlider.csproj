@@ -8,9 +8,9 @@
         <AssemblyName>Jellyfin.Plugin.CoreSlider</AssemblyName>
         <Nullable>enable</Nullable>
 
-        <Version>1.2.0.1</Version>
-        <AssemblyVersion>1.2.0.1</AssemblyVersion>
-        <FileVersion>1.2.0.1</FileVersion>
+        <Version>1.2.0.2</Version>
+        <AssemblyVersion>1.2.0.2</AssemblyVersion>
+        <FileVersion>1.2.0.2</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>

@@ -66,6 +66,13 @@ function initCoreSlider() {
 
         return coreSlideData.slideshow.ytPromise;
     }
+    
+    // Get authentication headers for API requests
+    function getAuthHeader() {
+        return ({
+            Authorization: 'MediaBrowser Client="' + coreSlideData.jellyfinData.appName + '", Device="' + coreSlideData.jellyfinData.deviceName + '", DeviceId="' + coreSlideData.jellyfinData.deviceId + '", Version="' + coreSlideData.jellyfinData.appVersion + '", Token="' + coreSlideData.jellyfinData.accessToken + '"'
+        });
+    };
 
     // Step 1 (Wait for ApiClient to initialize before starting the slideshow)
     function waitForApiClient() {
@@ -76,35 +83,48 @@ function initCoreSlider() {
                 return;
             }
 
-            if ( window.ApiClient._currentUser && window.ApiClient._currentUser.Id && window.ApiClient._serverInfo && window.ApiClient._serverInfo.AccessToken && typeof window.ApiClient.getPluginConfiguration === "function" ) {
-                window.ApiClient.getPluginConfiguration(coreSlideId).then(function(data) {
-                    if ( !coreSlideSettings ) { 
-                        coreSlideSettings = data;
-                        // Import custom css
-                        document.documentElement.style.setProperty('--slider-color-slide-shadow', data.SlideShadow);
-                    }
-                    continueInit();
-                }).catch(function(error) {
-                    console.warn("Core Slider - Failed to load plugin config. Re-checking...", error);
-                    coreRetryInterval += 250;
-                    setTimeout(check, coreRetryInterval);
-                });
+            if ( window.ApiClient._currentUser && window.ApiClient._currentUser.Id && window.ApiClient._serverInfo && window.ApiClient._serverInfo.AccessToken ) {
+
+                if ( !coreSlideData.slideshow.hasInitialized ) {
+                    initCoreData(function() {
+                        
+                        // ServerAddress
+                        var safeServerAddress = typeof window.ApiClient.serverAddress === 'function' ? window.ApiClient.serverAddress() : "";
+
+                        fetch(safeServerAddress + '/CoreSlider/config', {
+                            method: 'GET',
+                            headers: getAuthHeader()
+                        }).then(function(response) {
+                            if ( !response.ok ) { throw new Error('Network response was not ok: ' + response.status); }
+                            return response.json(); 
+                        }).then(function(data) {
+                            if ( !coreSlideSettings ) { 
+                                coreSlideSettings = data;
+                                // Import custom css
+                                if (data.SlideShadow) {
+                                    document.documentElement.style.setProperty('--slider-color-slide-shadow', data.SlideShadow);
+                                }
+                            }
+                            
+                            console.log("Core Slider - Configuration completed.");
+                            if ( coreSlideSettings.TrailersEnabled && coreSlideSettings.TrailersYoutube ) { initYouTubeAPI(); }
+                            initCoreDataSlides();
+
+                        }).catch(function(error) {
+                            console.warn("Core Slider - Failed to load custom plugin config. Re-checking...", error);
+                            coreRetryInterval += 250;
+                            setTimeout(check, coreRetryInterval);
+                        });
+
+                    });
+                } else {
+                    console.log("Core Slider - Already initialized. Skipping...");
+                }
+
             } else {
                 console.log("Core Slider - Authentication is incomplete. Retrying...");
                 coreRetryInterval += 250;
                 setTimeout(check, coreRetryInterval);
-            }
-        }
-
-        function continueInit() {
-            if ( !coreSlideData.slideshow.hasInitialized ) {
-                initCoreData(function() {
-                    console.log("Core Slider - Configuration completed.");
-                    if ( coreSlideSettings.TrailersEnabled && coreSlideSettings.TrailersYoutube ) { initYouTubeAPI(); }
-                    initCoreDataSlides();
-                });
-            } else {
-                console.log("Core Slider - Already initialized. Skipping...");
             }
         }
 
@@ -160,13 +180,6 @@ function initCoreSlider() {
     };
 
     // Step 4
-    // Get authentication headers for API requests
-    function getAuthHeader() {
-        return ({
-            Authorization: 'MediaBrowser Client="' + coreSlideData.jellyfinData.appName + '", Device="' + coreSlideData.jellyfinData.deviceName + '", DeviceId="' + coreSlideData.jellyfinData.deviceId + '", Version="' + coreSlideData.jellyfinData.appVersion + '", Token="' + coreSlideData.jellyfinData.accessToken + '"'
-        });
-    };
-
     // Fetches random items from the server
     function randomSlides() {
         return new Promise(function(resolve, reject) {

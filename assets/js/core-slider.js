@@ -1279,9 +1279,19 @@ function initCoreSlider() {
         var wasDragging = false;
 
         var VELOCITY_THRESHOLD = 0.3;
-        var DISTANCE_THRESHOLD = 0.25;
+        var DISTANCE_THRESHOLD = 0.25; 
 
-        createSlides.addEventListener('pointerdown', function(e) {
+        // Legacy helper for client moving
+        function getClientX(e) {
+            if ( e.touches && e.touches.length > 0 ) {
+                return e.touches[0].clientX;
+            } else if ( e.changedTouches && e.changedTouches.length > 0 ) {
+                return e.changedTouches[0].clientX;
+            }
+            return e.clientX;
+        }
+
+        function onDragStart(e) {
             if ( coreSlideData.slideshow.isAnimating ) { return; }
 
             // Prevent event from button element
@@ -1290,28 +1300,33 @@ function initCoreSlider() {
             // Pause autoplay on drag
             stopAutoplay();
 
-            e.preventDefault();
-            pointerStartX = e.clientX;
-            pointerCurrentX = e.clientX;
+            if ( e.type !== 'touchstart' ) { e.preventDefault(); }
+
+            pointerStartX = getClientX(e);
+            pointerCurrentX = getClientX(e);
             pointerStartTime = Date.now();
             isDragging = true;
             wasDragging = false;
 
-            createSlides.setPointerCapture(e.pointerId);
+            if ( e.pointerId ) { createSlides.setPointerCapture(e.pointerId); }
             createSlides.classList.add('touch-dragging', 'no-select');
-        });
+        }
 
-        createSlides.addEventListener('pointermove', function(e) {
+        function onDragMove(e) {
             if ( !isDragging ) { return; }
-            pointerCurrentX = e.clientX;
-
+            
+            // Legacy
+            if ( e.type === 'touchmove' ) { e.preventDefault(); }
+            
+            pointerCurrentX = getClientX(e);
+            
             var diff = pointerCurrentX - pointerStartX;
             var slideWidth = createSlides.parentElement.offsetWidth;
-
+            
             // Convert px to % for consistency
             var diffPercent = (diff / slideWidth) * 100;
             var currentOffsetPercent = -coreSlideData.slideshow.currentSlideIndex * 100;
-
+            
             var finalPercent = currentOffsetPercent + diffPercent;
 
             // Resistance for edges
@@ -1322,9 +1337,9 @@ function initCoreSlider() {
             if ( coreSlideSettings.AnimationEffect ) {
                 createSlides.style.transform = 'translateX(' + finalPercent + '%)';
             }
-        });
+        }
 
-        createSlides.addEventListener('pointerup', function() {
+        function onDragEnd(e) {
             if ( !isDragging ) { return; }
             isDragging = false;
             
@@ -1366,17 +1381,9 @@ function initCoreSlider() {
 
             // Resume autoplay after dragging
             resetAutoplay();
-        });
+        }
 
-        createSlides.addEventListener('click', function(e) {
-            if ( wasDragging ) {
-                e.stopPropagation();
-                e.preventDefault();
-                wasDragging = false;
-            }
-        }, true);
-
-        function resetDrag() {
+        function onDragCancel() {
             if ( !isDragging ) { return; }
             isDragging = false;
             var slideWidth = createSlides.parentElement.offsetWidth;
@@ -1388,10 +1395,39 @@ function initCoreSlider() {
             pointerCurrentX = 0;
         }
 
-        createSlides.addEventListener('pointercancel', resetDrag);
-        createSlides.addEventListener('pointerleave', function(e) {
-            if ( e.target === createSlides ) { resetDrag(); }
-        });
+        if ( window.PointerEvent ) {
+            // Modern Browsers
+            createSlides.addEventListener('pointerdown', onDragStart);
+            createSlides.addEventListener('pointermove', onDragMove);
+            createSlides.addEventListener('pointerup', onDragEnd);
+            createSlides.addEventListener('pointercancel', onDragCancel);
+            createSlides.addEventListener('pointerleave', function(e) {
+                if ( e.target === createSlides ) { onDragCancel(); }
+            });
+        } else {
+            // Legacy Browsers
+            // Touch Events
+            createSlides.addEventListener('touchstart', onDragStart, { passive: false });
+            createSlides.addEventListener('touchmove', onDragMove, { passive: false });
+            createSlides.addEventListener('touchend', onDragEnd);
+            createSlides.addEventListener('touchcancel', onDragCancel);
+            
+            // Mouse Events
+            createSlides.addEventListener('mousedown', onDragStart);
+            createSlides.addEventListener('mousemove', onDragMove);
+            createSlides.addEventListener('mouseup', onDragEnd);
+            createSlides.addEventListener('mouseleave', function(e) {
+                if ( e.target === createSlides ) { onDragCancel(); }
+            });
+        }
+
+        createSlides.addEventListener('click', function(e) {
+            if ( wasDragging ) {
+                e.stopPropagation();
+                e.preventDefault();
+                wasDragging = false;
+            }
+        }, true);
     }
 
     // Step 7

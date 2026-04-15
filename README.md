@@ -134,6 +134,25 @@ fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
 
 ---
 
+# FAQ
+
+<details>
+  <summary>Why isn't it working after I installed it?</summary>
+  Sometimes, depending on the device, the cache can cause issues. You might need to clear the cache for it to work properly. On TVs, often you need to uninstall and reinstall the app.
+</details>
+
+<details>
+  <summary>Why can't I see it on my TV right after I logged in?</summary>
+  Occasionally, after logging in, the app doesn't launch properly. You may need to close the app and open it again for it to run correctly.
+</details>
+
+<details>
+  <summary>Why was it working before but now it isn’t?</summary>
+  Sometimes, when the .js code is updated, you need to update your version as well, as significant changes might have been made that affect performance and functionality. You can use the GitHub version for testing because it always pulls the latest updated version.
+</details>
+
+---
+
 ## Screenshots
 
 ### Default theme

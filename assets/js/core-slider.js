@@ -1,9 +1,12 @@
-// Slider uuid
-var coreSlideId = "3a2c88a1-ed97-43a0-8425-36985ca4491a";
+// Slider app settings
+var coreSlideSettings = null;
 
 // Slider static settings
-var coreSlideSettings = null;
-var coreRetryInterval = 250;
+var coreSlideInfo = {
+    retryInterval: 250,
+    maxRetry: 2,
+    retry: 0
+}
 
 // State management
 var coreSlideData = {
@@ -44,7 +47,7 @@ var coreSlideData = {
 function initCoreSlider() {
     // Init Youtube API Video
     function initYouTubeAPI() {
-        if (coreSlideData.slideshow.ytPromise) return coreSlideData.slideshow.ytPromise;
+        if ( coreSlideData.slideshow.ytPromise ) { return coreSlideData.slideshow.ytPromise; }
 
         coreSlideData.slideshow.ytPromise = new Promise(function(resolve) {
             if ( window.YT && window.YT.Player ) {
@@ -72,14 +75,19 @@ function initCoreSlider() {
         return ({
             Authorization: 'MediaBrowser Client="' + coreSlideData.jellyfinData.appName + '", Device="' + coreSlideData.jellyfinData.deviceName + '", DeviceId="' + coreSlideData.jellyfinData.deviceId + '", Version="' + coreSlideData.jellyfinData.appVersion + '", Token="' + coreSlideData.jellyfinData.accessToken + '"'
         });
-    };
+    }
 
     // Step 1 (Wait for ApiClient to initialize before starting the slideshow)
     function waitForApiClient() {
         function check() {
+            if ( coreSlideInfo.retry > coreSlideInfo.maxRetry ) { 
+                console.log("Core Slider - You reached the maximum retries. Restart your client.");
+                return;
+            }
+
             if ( !window.ApiClient ) {
                 console.log("Core Slider - ApiClient is not available yet. Waiting...");
-                setTimeout(check, coreRetryInterval);
+                setTimeout(check, coreSlideInfo.retryInterval);
                 return;
             }
 
@@ -112,8 +120,8 @@ function initCoreSlider() {
 
                         }).catch(function(error) {
                             console.warn("Core Slider - Failed to load custom plugin config. Re-checking...", error);
-                            coreRetryInterval += 250;
-                            setTimeout(check, coreRetryInterval);
+                            coreSlideInfo.retryInterval += 250;
+                            setTimeout(check, coreSlideInfo.retryInterval);
                         });
 
                     });
@@ -123,9 +131,11 @@ function initCoreSlider() {
 
             } else {
                 console.log("Core Slider - Authentication is incomplete. Retrying...");
-                coreRetryInterval += 250;
-                setTimeout(check, coreRetryInterval);
+                coreSlideInfo.retryInterval += 250;
+                setTimeout(check, coreSlideInfo.retryInterval);
             }
+
+            coreSlideInfo.retry += 1;
         }
 
         check();
@@ -135,7 +145,7 @@ function initCoreSlider() {
     function initCoreData(callback) {
         if ( !window.ApiClient ) {
             console.warn("Core Slider - apiClient is not available yet. Retrying...");
-            setTimeout(function() { initCoreData(callback), coreRetryInterval });
+            setTimeout(function() { initCoreData(callback), coreSlideInfo.retryInterval });
             return;
         }
 
@@ -162,7 +172,7 @@ function initCoreSlider() {
             }
         } catch (error) {
             console.error("Core Slider - Error initializing ApiClient data:", error);
-            setTimeout(function() { initCoreData(callback), coreRetryInterval });
+            setTimeout(function() { initCoreData(callback), coreSlideInfo.retryInterval });
         }
     };
 

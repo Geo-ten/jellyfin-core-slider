@@ -4,7 +4,7 @@ var coreSlideSettings = null;
 // Slider static settings
 var coreSlideInfo = {
     retryInterval: 250,
-    maxRetry: 2,
+    maxRetry: 3,
     retry: 0
 }
 
@@ -79,6 +79,15 @@ function initCoreSlider() {
 
     // Step 1 (Wait for ApiClient to initialize before starting the slideshow)
     function waitForApiClient() {
+        function retryInterval() {
+            if ( coreSlideInfo.retry < 2 ) { coreSlideInfo.retryInterval += 250; }
+            else { coreSlideInfo.retryInterval += 1250; }
+
+            coreSlideInfo.retry += 1;
+
+            setTimeout(check, coreSlideInfo.retryInterval);
+        }
+
         function check() {
             if ( coreSlideInfo.retry > coreSlideInfo.maxRetry ) { 
                 console.log("Core Slider - You reached the maximum retries. Restart your client.");
@@ -87,7 +96,7 @@ function initCoreSlider() {
 
             if ( !window.ApiClient ) {
                 console.log("Core Slider - ApiClient is not available yet. Waiting...");
-                setTimeout(check, coreSlideInfo.retryInterval);
+                retryInterval();
                 return;
             }
 
@@ -120,8 +129,7 @@ function initCoreSlider() {
 
                         }).catch(function(error) {
                             console.warn("Core Slider - Failed to load custom plugin config. Re-checking...", error);
-                            coreSlideInfo.retryInterval += 250;
-                            setTimeout(check, coreSlideInfo.retryInterval);
+                            retryInterval();
                         });
 
                     });
@@ -131,11 +139,8 @@ function initCoreSlider() {
 
             } else {
                 console.log("Core Slider - Authentication is incomplete. Retrying...");
-                coreSlideInfo.retryInterval += 250;
-                setTimeout(check, coreSlideInfo.retryInterval);
+                retryInterval();
             }
-
-            coreSlideInfo.retry += 1;
         }
 
         check();

@@ -36,6 +36,17 @@ namespace Jellyfin.Plugin.CoreSlider {
             if ( string.IsNullOrWhiteSpace(webPath) ) { return; }
 
             var file = Path.Combine(webPath, "index.html");
+
+            // Fallback for Linux - if wwwroot doesn't exist, try /var/lib/jellyfin/web
+            if ( !File.Exists(file) && webPath.Contains("wwwroot") ) {
+                string linuxPath = webPath.Replace("wwwroot", "web");
+                string linuxFile = Path.Combine(linuxPath, "index.html");
+                if ( File.Exists(linuxFile) ) {
+                    logger.LogInformation("wwwroot path not found, using linux path: {0}", linuxPath);
+                    file = linuxFile;
+                }
+            }
+
             if ( !File.Exists(file) ) { return; }
 
             string content = File.ReadAllText(file);
@@ -102,7 +113,7 @@ namespace Jellyfin.Plugin.CoreSlider {
             //     // Fallback to root
             // }
 
-            // Configuration CDN 
+            // Configuration CDN
             var config = Plugin.Instance?.Configuration;
             string configCdnMethod = config?.CdnMethod ?? "JSDelivr";
             string configJsVersion = config?.LocalJsVersion ?? "1.0.0";
@@ -110,20 +121,23 @@ namespace Jellyfin.Plugin.CoreSlider {
             // Default value JSDelivr
             string cdn = "https://cdn.jsdelivr.net/gh/Geo-ten/jellyfin-core-slider@main";
             string versionSuffix = "";
+            string cssSource;
+            string jsSource;
 
-            if ( configCdnMethod == "Local" ) { 
+            if ( configCdnMethod == "Local" ) {
+                // Local
                 cdn = ".";
                 versionSuffix = $"?v={configJsVersion}";
-            }
-
-            string cssSource = $"{cdn}/assets/css/core-slider.css{versionSuffix}";
-            string jsSource = $"{cdn}/assets/js/core-slider.js{versionSuffix}";
-
-            // Temp RAM (Method)
-            if ( configCdnMethod == "Github" ) {
+                cssSource = $"{cdn}/assets/css/core-slider.css{versionSuffix}";
+                jsSource = $"{cdn}/assets/js/core-slider.js{versionSuffix}";
+            } else if ( configCdnMethod == "Github" ) {
+                // Github
                 cdn = "/CoreSlider";
                 cssSource = $"{cdn}/core-slider.css";
                 jsSource = $"{cdn}/core-slider.js";
+            } else { // JSDelivr (default)
+                cssSource = $"{cdn}/assets/css/core-slider.css{versionSuffix}";
+                jsSource = $"{cdn}/assets/js/core-slider.js{versionSuffix}";
             }
 
             var link = $"<link rel=\"stylesheet\" href=\"{cssSource}\" />\n";

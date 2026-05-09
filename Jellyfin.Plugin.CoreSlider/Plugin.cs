@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Loader;
 using Jellyfin.Plugin.CoreSlider.Configuration;
@@ -17,13 +18,29 @@ namespace Jellyfin.Plugin.CoreSlider {
         public override Guid Id => Guid.Parse("3a2c88a1-ed97-43a0-8425-36985ca4491a");
 
         private readonly ILogger<Plugin> _logger;
-        public string? WebPath { get; }
+        private readonly string? _webPath;
+        public string? WebPath {
+            get {
+                if ( string.IsNullOrWhiteSpace(_webPath) ) { return _webPath; }
+
+                // Check if path exists, if not try linux path
+                if ( !Directory.Exists(_webPath) && _webPath.Contains("wwwroot") ) {
+                    string linuxPath = _webPath.Replace("wwwroot", "web");
+                    if ( Directory.Exists(linuxPath) ) {
+                        _logger.LogInformation("Configured web path does not exist, using linux path: {0}", linuxPath);
+                        return linuxPath;
+                    }
+                }
+
+                return _webPath;
+            }
+        }
         public IServerConfigurationManager ServerConfigurationManager { get; }
 
         public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer, ILogger<Plugin> logger, IServerConfigurationManager serverConfigurationManager) : base(applicationPaths, xmlSerializer) {
             Instance = this;
             _logger = logger;
-            WebPath = applicationPaths.WebPath;
+            _webPath = applicationPaths.WebPath;
             ServerConfigurationManager = serverConfigurationManager;
         }
 

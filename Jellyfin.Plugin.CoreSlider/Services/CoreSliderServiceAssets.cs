@@ -12,17 +12,19 @@ namespace Jellyfin.Plugin.CoreSlider.Services {
         private static readonly HttpClient _http = new();
 
         private const string GithubBase = "https://raw.githubusercontent.com/Geo-ten/jellyfin-core-slider/main";
+        private const string LocalBase = "/path/to/local/assets"; // Add the path to your local assets
 
         public async Task<(string content, string contentType)?> GetAsset(string filename) {
             var config = Plugin.Instance?.Configuration;
             string contentType = filename.EndsWith(".js") ? "application/javascript" : "text/css";
 
-            // Github CDN method
-            if ( config?.CdnMethod == "Github" ) {
-                return await GetCachedResource(filename, $"{GithubBase}/assets/{(filename.EndsWith(".js") ? "js" : "css")}/{filename}", contentType);
+            // Local method first
+            if (config?.CdnMethod == "Local") {
+                return await GetCachedResource(filename, $"{LocalBase}/assets/{(filename.EndsWith(".js") ? "js" : "css")}/{filename}", contentType);
             }
 
-            return null;
+            // Github CDN method
+            return await GetCachedResource(filename, $"{GithubBase}/assets/{(filename.EndsWith(".js") ? "js" : "css")}/{filename}", contentType);
         }
 
         private async Task<(string content, string contentType)?> GetCachedResource(string key, string url, string contentType) {

@@ -51,23 +51,40 @@ namespace Jellyfin.Plugin.CoreSlider {
 
             string content = File.ReadAllText(file);
 
-            if ( content.Contains(Comment) ) {
-                logger.LogInformation("Core Slider is already injected in {0}", file);
-                return;
-            }
-
             var (css, js) = GetInjectionTags();
 
-            string modifiedContent = InjectTags(content, css, js, logger);
+            // Check if already injected with the SAME content
+            bool containsComment = content.Contains(Comment);
 
-            // Don't re-write the file if nothing changed
-            if (content.Equals(modifiedContent)) { return; }
+            if ( containsComment ) {
+                // Fresh injection
+                string modifiedContent = InjectTags(content, css, js, logger);
 
-            try {
-                File.WriteAllText(file, modifiedContent);
-                logger.LogInformation("Successfully injected Core Slider into {0}", file);
-            } catch (Exception e) {
-                logger.LogError(e, "Encountered exception while writing to {0}", file);
+                // Remove old injection first, then re-inject with current config
+                content = RemoveOldInjection(content);
+            
+                // Don't re-write the file if nothing changed
+                if ( content.Equals(modifiedContent) ) { return; }
+
+                try {
+                    File.WriteAllText(file, modifiedContent);
+                    logger.LogInformation("Successfully injected Core Slider into {0}", file);
+                } catch (Exception error) {
+                    logger.LogError(error, "Encountered exception while writing to {0}", file);
+                }
+            } else {
+                // Fresh injection
+                string modifiedContent = InjectTags(content, css, js, logger);
+
+                // Don't re-write the file if nothing changed
+                if ( content.Equals(modifiedContent) ) { return; }
+
+                try {
+                    File.WriteAllText(file, modifiedContent);
+                    logger.LogInformation("Successfully injected Core Slider into {0}", file);
+                } catch (Exception error) {
+                    logger.LogError(error, "Encountered exception while writing to {0}", file);
+                }
             }
         }
 
@@ -93,6 +110,23 @@ namespace Jellyfin.Plugin.CoreSlider {
             if ( body == -1 && head == -1 && logger != null ) {
                 logger.LogWarning("Could not find closing head/body tags");
             }
+
+            return content;
+        }
+
+        private static string RemoveOldInjection(string content) {
+            // Find and remove everything from <!-- CoreSlider --> comment through the closing script tag
+            int startIndex = content.IndexOf(Comment, StringComparison.OrdinalIgnoreCase);
+            if ( startIndex == -1 ) { return content; }
+
+            // Find the matching </script> after the comment
+            int endIndex = content.IndexOf("</script>", startIndex, StringComparison.OrdinalIgnoreCase);
+            if ( endIndex == -1 ) { return content; }
+            
+            endIndex += "</script>".Length;
+
+            // Remove the block from the comment to end of script tag
+            content = content.Remove(startIndex, endIndex - startIndex);
 
             return content;
         }

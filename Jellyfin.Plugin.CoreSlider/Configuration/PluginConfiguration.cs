@@ -35,6 +35,7 @@ namespace Jellyfin.Plugin.CoreSlider.Configuration {
         public bool InfoAgeRating { get; set; } = true;
         public bool InfoRuntime { get; set; } = true;
         public bool InfoStarRating { get; set; } = true;
+        public bool InfoRottenTomatoes { get; set; } = false;
 
         // Trailers
         public bool TrailersEnabled { get; set; } = false;

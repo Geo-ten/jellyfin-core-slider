@@ -15,13 +15,13 @@ namespace Jellyfin.Plugin.CoreSlider.Services {
         private const string GithubBase = "https://raw.githubusercontent.com/Geo-ten/jellyfin-core-slider/main";
 
         public async Task<(string content, string contentType)?> GetAsset(string filename) {
-            var webPath = Plugin.Instance?.WebPath;
+            var webPath = ResolveWebPath(Plugin.Instance?.WebPath);
             var config = Plugin.Instance?.Configuration;
             string contentType = filename.EndsWith(".js") ? "application/javascript" : "text/css";
             string assetFolder = filename.EndsWith(".js") ? "js" : "css";
 
             // Local method
-            if ( config?.CdnMethod == "Local" && !string.IsNullOrEmpty(webPath) ) {
+            if ( string.Equals(config?.CdnMethod, "Local", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(webPath) ) {
                 var localFilePath = Path.Combine(webPath, "assets", assetFolder, filename);
                 
                 return await GetCachedResource(filename, localFilePath, contentType, "local");
@@ -29,6 +29,36 @@ namespace Jellyfin.Plugin.CoreSlider.Services {
 
             // Github CDN method
             return await GetCachedResource(filename, $"{GithubBase}/assets/{assetFolder}/{filename}", contentType, "cdn");
+        }
+
+        private static string? ResolveWebPath(string? webPath) {
+            if ( string.IsNullOrWhiteSpace(webPath) ) {
+                return null;
+            }
+
+            if ( Directory.Exists(webPath) ) {
+                return webPath;
+            }
+
+            var candidatePaths = new List<string> {
+                webPath,
+            };
+
+            if ( webPath.Contains("wwwroot", StringComparison.OrdinalIgnoreCase) ) {
+                candidatePaths.Add(webPath.Replace("wwwroot", "web", StringComparison.OrdinalIgnoreCase));
+            }
+
+            candidatePaths.Add("/var/lib/jellyfin/web");
+            candidatePaths.Add("/usr/share/jellyfin/web");
+            candidatePaths.Add("/opt/jellyfin/jellyfin-web");
+
+            foreach ( var candidatePath in candidatePaths ) {
+                if ( Directory.Exists(candidatePath) ) {
+                    return candidatePath;
+                }
+            }
+
+            return webPath;
         }
 
         private async Task<(string content, string contentType)?> GetCachedResource(string key, string url, string contentType, string method) {

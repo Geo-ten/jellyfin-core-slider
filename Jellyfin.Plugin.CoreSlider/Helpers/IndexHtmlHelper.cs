@@ -19,33 +19,23 @@ namespace Jellyfin.Plugin.CoreSlider {
                 string content = payload.Contents ?? string.Empty;
                 if ( string.IsNullOrEmpty(content) ) { return content; }
 
-                if ( content.Contains(Comment) ) { return content; }
-
                 var (css, js) = GetInjectionTags();
-                
-                return InjectTags(content, css, js);
+                string contentWithoutOldInjection = RemoveOldInjection(content);
+
+                return InjectTags(contentWithoutOldInjection, css, js);
             } catch {
                 return payload?.Contents ?? string.Empty;
             }
         }
 
-        public static void Direct(ILogger logger) {
-            logger.LogInformation("Attempting to inject Core Slider script directly into index.html.");
+        public static void Direct(ILogger? logger = null) {
+            logger?.LogInformation("Attempting to inject Core Slider script directly into index.html.");
 
             string? webPath = Plugin.Instance?.WebPath;
             if ( string.IsNullOrWhiteSpace(webPath) ) { return; }
 
-            var file = Path.Combine(webPath, "index.html");
-
-            // Fallback for Linux - if wwwroot doesn't exist, try /var/lib/jellyfin/web
-            if ( !File.Exists(file) && webPath.Contains("wwwroot") ) {
-                string linuxPath = webPath.Replace("wwwroot", "web");
-                string linuxFile = Path.Combine(linuxPath, "index.html");
-                if ( File.Exists(linuxFile) ) {
-                    logger.LogInformation("wwwroot path not found, using linux path: {0}", linuxPath);
-                    file = linuxFile;
-                }
-            }
+            string file = ResolveIndexHtmlPath(webPath);
+            if ( string.IsNullOrWhiteSpace(file) ) { return; }
 
             if ( !File.Exists(file) ) { return; }
 
@@ -53,39 +43,48 @@ namespace Jellyfin.Plugin.CoreSlider {
 
             var (css, js) = GetInjectionTags();
 
-            // Check if already injected with the SAME content
-            bool containsComment = content.Contains(Comment);
+            // Remove any existing CoreSlider block first so we can re-inject the current config cleanly.
+            string contentWithoutOldInjection = RemoveOldInjection(content);
+            string modifiedContent = InjectTags(contentWithoutOldInjection, css, js, logger);
 
-            if ( containsComment ) {
-                // Fresh injection
-                string modifiedContent = InjectTags(content, css, js, logger);
+            // Don't re-write the file if nothing changed
+            if ( contentWithoutOldInjection.Equals(modifiedContent) ) { return; }
 
-                // Remove old injection first, then re-inject with current config
-                content = RemoveOldInjection(content);
-            
-                // Don't re-write the file if nothing changed
-                if ( content.Equals(modifiedContent) ) { return; }
+            try {
+                File.WriteAllText(file, modifiedContent);
+                logger?.LogInformation("Successfully injected Core Slider into {0}", file);
+            } catch (Exception error) {
+                logger?.LogError(error, "Encountered exception while writing to {0}", file);
+            }
+        }
 
-                try {
-                    File.WriteAllText(file, modifiedContent);
-                    logger.LogInformation("Successfully injected Core Slider into {0}", file);
-                } catch (Exception error) {
-                    logger.LogError(error, "Encountered exception while writing to {0}", file);
+        private static string ResolveIndexHtmlPath(string? webPath) {
+            if ( string.IsNullOrWhiteSpace(webPath) ) {
+                return string.Empty;
+            }
+
+            string[] candidatePaths = {
+                webPath,
+                Path.Combine(webPath, "index.html"),
+                webPath.Replace("wwwroot", "web", StringComparison.OrdinalIgnoreCase),
+                Path.Combine(webPath.Replace("wwwroot", "web", StringComparison.OrdinalIgnoreCase), "index.html"),
+                "/var/lib/jellyfin/web/index.html",
+                "/usr/share/jellyfin/web/index.html",
+                "/opt/jellyfin/jellyfin-web/index.html",
+                "/srv/jellyfin/wwwroot/index.html"
+            };
+
+            foreach ( string candidatePath in candidatePaths ) {
+                if ( string.IsNullOrWhiteSpace(candidatePath) ) {
+                    continue;
                 }
-            } else {
-                // Fresh injection
-                string modifiedContent = InjectTags(content, css, js, logger);
 
-                // Don't re-write the file if nothing changed
-                if ( content.Equals(modifiedContent) ) { return; }
-
-                try {
-                    File.WriteAllText(file, modifiedContent);
-                    logger.LogInformation("Successfully injected Core Slider into {0}", file);
-                } catch (Exception error) {
-                    logger.LogError(error, "Encountered exception while writing to {0}", file);
+                if ( File.Exists(candidatePath) ) {
+                    return candidatePath;
                 }
             }
+
+            return Path.Combine(webPath, "index.html");
         }
 
         private static string InjectTags(string content, string css, string js, ILogger ? logger = null) {
@@ -149,7 +148,7 @@ namespace Jellyfin.Plugin.CoreSlider {
 
             // Configuration CDN
             var config = Plugin.Instance?.Configuration;
-            string configCdnMethod = config?.CdnMethod ?? "JSDelivr";
+            string configCdnMethod = (config?.CdnMethod ?? "JSDelivr").Trim();
             string configJsVersion = config?.LocalJsVersion ?? "1.0.0";
 
             // Default value JSDelivr
@@ -158,13 +157,14 @@ namespace Jellyfin.Plugin.CoreSlider {
             string cssSource;
             string jsSource;
 
-            if ( configCdnMethod == "Local" ) {
+            string normalizedCdnMethod = configCdnMethod.ToLowerInvariant();
+            if ( normalizedCdnMethod == "local" ) {
                 // Local
                 cdn = ".";
                 versionSuffix = $"?v={configJsVersion}";
                 cssSource = $"{cdn}/assets/css/core-slider.css{versionSuffix}";
                 jsSource = $"{cdn}/assets/js/core-slider.js{versionSuffix}";
-            } else if ( configCdnMethod == "Github" ) {
+            } else if ( normalizedCdnMethod == "github" ) {
                 // Github
                 cdn = "/CoreSlider";
                 cssSource = $"{cdn}/core-slider.css";

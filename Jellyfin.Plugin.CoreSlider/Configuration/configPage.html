@@ -49,8 +49,8 @@
                         </div>
 
                         <div class="inputContainer">
-                            <label class="inputLabel inputLabelUnfocused" for="fileNameLocation">Custom List File (optional)</label>
-                            <input type="text" id="fileNameLocation" is="emby-input" placeholder="Put your files where Jellyfin app is '..\jellyfin-web\assets\list.txt' e.g. 'assets\list.txt'" />
+                            <label class="inputLabel inputLabelUnfocused" for="fileNameLocation">Custom List File For Static Slides (optional)</label>
+                            <input type="text" id="fileNameLocation" is="emby-input" placeholder="Put the list.txt in the same folder, where Jellyfin app exists '..web\assets\list.txt' - (only IDs inside 1,2)" />
                         </div>
 
                         <h2>Animation</h2>
@@ -198,6 +198,13 @@
                             </label>
                         </div>
 
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="infoRottenTomatoes" is="emby-checkbox" />
+                                <span>Show Rotten Tomatoes</span>
+                            </label>
+                        </div>
+
                         <h2>Load app files from CDN/Local</h2>
 
                         <div class="inputContainer">
@@ -284,8 +291,9 @@
                     document.getElementById('infoAgeRating').checked = config.InfoAgeRating;
                     document.getElementById('infoRuntime').checked = config.InfoRuntime;
                     document.getElementById('infoStarRating').checked = config.InfoStarRating;
-                    document.getElementById('cdnMethod').value = config.CdnMethod;
-                    document.getElementById('localJsVersion').value = config.LocalJsVersion;
+                    document.getElementById('infoRottenTomatoes').checked = config.InfoRottenTomatoes;
+                    document.getElementById('cdnMethod').value = config.CdnMethod || 'JSDelivr';
+                    document.getElementById('localJsVersion').value = config.LocalJsVersion || '1.0.0';
 
                     // Clear Cache System
                     updateButtonVisibility();
@@ -338,6 +346,7 @@
                         config.InfoAgeRating = document.getElementById('infoAgeRating').checked;
                         config.InfoRuntime = document.getElementById('infoRuntime').checked;
                         config.InfoStarRating = document.getElementById('infoStarRating').checked;
+                        config.InfoRottenTomatoes = document.getElementById('infoRottenTomatoes').checked;
                         config.TrailersEnabled = document.getElementById('trailersEnabled').checked;
                         config.TrailersYoutube = document.getElementById('trailersYoutube').checked;
                         config.TrailersLocal = document.getElementById('trailersLocal').checked;
@@ -348,6 +357,18 @@
 
                         ApiClient.updatePluginConfiguration(PLUGIN_ID, config).then(function() {
                             Dashboard.processPluginConfigurationUpdateResult();
+                            return fetch('/CoreSlider/reload-injection', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': 'MediaBrowser Token="' + ApiClient.accessToken() + '"'
+                                }
+                            });
+                        }).then(function(response) {
+                            if (!response.ok) {
+                                console.warn('Failed to reload injected Core Slider assets');
+                            }
+                        }).catch(function(error) {
+                            console.error('Failed to save Core Slider configuration:', error);
                         });
                     });
                 });

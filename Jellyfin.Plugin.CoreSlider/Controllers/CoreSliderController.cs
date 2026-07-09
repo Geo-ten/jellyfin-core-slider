@@ -47,5 +47,12 @@ namespace Jellyfin.Plugin.CoreSlider.Controllers {
             AssetService.ClearCache();
             return Ok(new { message = "Cache cleared successfully" });
         }
+
+        [HttpPost("reload-injection")]
+        [Authorize]
+        public IActionResult ReloadInjection() {
+            Jellyfin.Plugin.CoreSlider.IndexHtmlHelper.Direct();
+            return Ok(new { message = "Injection reloaded successfully" });
+        }
     }
 }

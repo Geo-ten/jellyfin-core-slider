@@ -391,6 +391,21 @@
     color: var(--slider-color-gold);
 }
 
+.core-slide .core-slide-info-rotten-tomatoes,
+.core-slide .core-slide-info-rotten-tomatoes span,
+.core-slide .core-slide-info-rotten-tomatoes p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.core-slide .core-slide-info-rotten-tomatoes span {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+}
+
 .core-slide .core-slide-overview p {
     margin-top: 0;
     margin-bottom: 0;

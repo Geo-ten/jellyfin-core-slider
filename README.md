@@ -24,7 +24,7 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 - Smart autoplay with bounce direction
 - Autoplay pauses on drag and resets timer on manual navigation
 - Automatic show/hide based on current page
-- Rotten Tomato / IMDB based ratings
+- Rotten Tomato / IMDB rating system
 - Trailers (Local and Youtube)
 - Editable settings via native Jellyfin Plugin Dashboard
 - Load the files via CDN or Local method

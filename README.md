@@ -17,13 +17,14 @@ The main goal of this slider was to work on **LG WebOS TV** with full remote con
 
 ## Features
 
-- Displays random or curated via a `(file-name).txt` movies/series from your Jellyfin library
+- Displays random or curated via a `list.txt` movies/series from your Jellyfin library
 - Responsive layouts for Desktop, Mobile, and TV
 - LG WebOS TV support with full remote control navigation
 - Swipe/drag support with velocity-based slide detection
 - Smart autoplay with bounce direction
 - Autoplay pauses on drag and resets timer on manual navigation
 - Automatic show/hide based on current page
+- Rotten Tomato / IMDB based ratings
 - Trailers (Local and Youtube)
 - Editable settings via native Jellyfin Plugin Dashboard
 - Load the files via CDN or Local method
@@ -70,6 +71,10 @@ If you don't want files directly from jsDelivr or the Github RAW.
 
 Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/jellyfin-core-slider/releases) and copy the files into your Jellyfin Web assets folder.
 
+Possible locations of your Jellyfin:
+**Windows** - 'C:\Program Files\Jellyfin\Web\assets\{js/css}\{file}' or 'C:\Users\<username>\AppData\Roaming\Jellyfin\Web\assets\{js/css}\{file}'
+**Linux** - '/usr/share/jellyfin/web/assets/{js/css}\{file}'
+
 Change from the **Dashboard > Core Slider**:
 
 ```
@@ -89,7 +94,7 @@ Navigate to **Dashboard > Core Slider** to access the UI settings page.
 
 You can display specific items instead of random ones.
 
-1. Create a `(file-name).txt` file in your Jellyfin web folder:
+1. Create a `list.txt` file in your Jellyfin web folder:
 
 ```
 My Curated List
@@ -101,7 +106,8 @@ ItemID3
 2. Set the path in settings:
 
 ```javascript
-fileNameLocation: '/jellyfin-web/(folder-name)/(file-name).txt'
+fileNameLocation (Windows): '/jellyfin-web/(folder-name)/list.txt'
+fileNameLocation (Linux): '/usr/share/jellyfin/web/(folder-name)/list.txt'
 ```
 
 > Item IDs can be found in the URL when browsing an item in Jellyfin.

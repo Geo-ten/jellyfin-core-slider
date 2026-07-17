@@ -72,8 +72,11 @@ If you don't want files directly from jsDelivr or the Github RAW.
 Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/jellyfin-core-slider/releases) and copy the files into your Jellyfin Web assets folder.
 
 Possible locations of your Jellyfin:
+
+```
 **Windows** - 'C:\Program Files\Jellyfin\Web\assets\{js/css}\{file}' or 'C:\Users\<username>\AppData\Roaming\Jellyfin\Web\assets\{js/css}\{file}'
 **Linux** - '/usr/share/jellyfin/web/assets/{js/css}\{file}'
+```
 
 Change from the **Dashboard > Core Slider**:
 
@@ -106,8 +109,8 @@ ItemID3
 2. Set the path in settings:
 
 ```javascript
-fileNameLocation (Windows): '/jellyfin-web/(folder-name)/list.txt'
-fileNameLocation (Linux): '/usr/share/jellyfin/web/(folder-name)/list.txt'
+Windows - fileNameLocation: '/jellyfin-web/(folder-name)/list.txt'
+Linux - fileNameLocation: '/usr/share/jellyfin/web/(folder-name)/list.txt'
 ```
 
 > Item IDs can be found in the URL when browsing an item in Jellyfin.

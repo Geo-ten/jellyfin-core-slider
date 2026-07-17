@@ -73,9 +73,9 @@ Download the latest release [core-slider-vX.X.X.zip](https://github.com/Geo-ten/
 
 Possible locations of your Jellyfin:
 
-```
-**Windows** - 'C:\Program Files\Jellyfin\Web\assets\{js/css}\{file}' or 'C:\Users\<username>\AppData\Roaming\Jellyfin\Web\assets\{js/css}\{file}'
-**Linux** - '/usr/share/jellyfin/web/assets/{js/css}\{file}'
+```javascript
+Windows: 'C:\Program Files\Jellyfin\Web\assets\{js/css}\{file}' OR 'C:\Users\<username>\AppData\Roaming\Jellyfin\Web\assets\{js/css}\{file}'
+Linux: '/usr/share/jellyfin/web/assets/{js/css}\{file}'
 ```
 
 Change from the **Dashboard > Core Slider**:

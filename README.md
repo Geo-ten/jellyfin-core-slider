@@ -4,7 +4,7 @@ A custom featured content slider for Jellyfin Web, optimized for Desktop, Mobile
 
 <img src="/assets/images/logo.png" alt="Logo" width="85%" height="auto" />
 
-> Tested on Jellyfin **10.10.7** and newer verions **10.11.x**.  
+> Tested on Jellyfin **10.10.7**, **10.11.x** and newer verions **12.x.x**.  
 > Compatible with **ES5** - Support older Smart TV browsers (WebOS 2.0).
 
 ---
@@ -50,8 +50,12 @@ Core Slider can be a standalone Jellyfin plugin.
 
 Important
 
- - If you are on Jellyfin version **10.11.x**
+ - If you are on Jellyfin version **12.x.x**
+```
+https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/12/manifest.json
+```
 
+ - If you are on Jellyfin version **10.11.x**
 ```
 https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/10.11/manifest.json
 ```

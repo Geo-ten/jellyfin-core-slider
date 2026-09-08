@@ -787,8 +787,8 @@ function initCoreSlider() {
 
         // Add custom height to prevent menu from covering the slider
         if ( coreSlideSettings.Theme === 'default' ) {
-            var skinHeader = document.querySelector('.skinHeader');
-            var headerHeight = skinHeader.offsetHeight;
+            var headerMenu = document.querySelector('header');
+            var headerHeight = headerMenu.offsetHeight;
             document.documentElement.style.setProperty('--slider-height-header', headerHeight + 'px');
         }
 
@@ -828,7 +828,14 @@ function initCoreSlider() {
         coreSlideData.slideshow.elements.createSlides = createSlides;
         coreSlideData.slideshow.elements.createDots = createDots;
 
-        document.body.appendChild(coreSlide);
+        var appMenu = document.getElementById('app-sync-play-menu');
+        if ( !appMenu ) {
+            appMenu = document.getElementById('reactRoot');
+            appMenu.parentNode.insertBefore(coreSlide, appMenu.nextSibling);
+        } else {
+            appMenu.parentNode.insertBefore(coreSlide, appMenu);
+        }
+
         return { coreSlide: coreSlide, createSlides: createSlides, createDots: createDots, buttonNext: buttonNext, buttonPrevious: buttonPrevious };
     }
 

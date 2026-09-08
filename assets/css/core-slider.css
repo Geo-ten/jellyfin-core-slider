@@ -28,7 +28,7 @@
     --slider-trailer-cover: cover;
     --slider-trailer-cover-mobile: contain;
     --slider-height-gap: 1.2em;
-    --slider-height-gap-min: 0.5em;
+    --slider-height-gap-min: 2.5em;
     --slider-height-desktop: 700px;
     --slider-height-mobile: 400px;
     --slider-height-tv: 740px;
@@ -60,7 +60,7 @@
 #core-slider {
     width: auto;
     height: auto;
-    position: relative;
+    position: absolute;
     display: block;
     margin-top: calc(var(--slider-height-gap) + var(--slider-height-header));
     overflow: hidden;
@@ -68,6 +68,7 @@
     margin-left: max(env(safe-area-inset-left), 3.3%);
     margin-right: max(env(safe-area-inset-right), 3.3%);
     z-index: 1;
+    top: 0;
 }
 
 .html-slider #reactRoot .homeSectionsContainer {

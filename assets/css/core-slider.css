@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.7
+    Version: 1.1.1.8
 */
 
 :root {
@@ -69,6 +69,8 @@
     margin-right: max(env(safe-area-inset-right), 3.3%);
     z-index: 1;
     top: 0;
+    left: 0;
+    right: 0;
 }
 
 .html-slider #reactRoot .homeSectionsContainer {

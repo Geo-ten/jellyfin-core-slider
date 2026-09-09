@@ -50,6 +50,9 @@ Core Slider can be a standalone Jellyfin plugin.
 
 Important
 
+**Because the recent update to support Jellyfin version **12.x.x**, the previous versions possible will have problem with .js / .css.
+Then try on your local a previous updated file from v1.8.0**
+
  - If you are on Jellyfin version **12.x.x**
 ```
 https://raw.githubusercontent.com/Geo-ten/jellyfin-plugins/main/12/manifest.json

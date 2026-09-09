@@ -46,7 +46,7 @@ var coreSlideData = {
             timeout: null
         },
         elements: {}
-    },
+    }
 };
 
 function initCoreSlider() {
@@ -96,6 +96,7 @@ function initCoreSlider() {
         function check() {
             if ( coreSlideInfo.retry > coreSlideInfo.maxRetry ) { 
                 console.log("Core Slider - You reached the maximum retries. Restart your client.");
+                coreSlideData.slideshow.isInitializing = false;
                 return;
             }
 
@@ -105,14 +106,28 @@ function initCoreSlider() {
                 return;
             }
 
-            if ( window.ApiClient._currentUser && window.ApiClient._currentUser.Id && window.ApiClient._serverInfo && window.ApiClient._serverInfo.AccessToken ) {
+            var apiClient = window.ApiClient;
+            var currentUserId = null, accessToken = null;
+            var safeServerAddress = "";
+            
+            
+            if ( typeof apiClient.getCurrentUserId === 'function' ) { currentUserId = apiClient.getCurrentUserId();
+            } else if ( apiClient._currentUser && apiClient._currentUser.Id ) { 
+                currentUserId = apiClient._currentUser.Id;
+            }
+            if ( typeof apiClient.accessToken === 'function' ) { accessToken = apiClient.accessToken();
+            } else if ( apiClient._serverInfo && apiClient._serverInfo.AccessToken ) { 
+                accessToken = apiClient._serverInfo.AccessToken;
+            }
+            if ( typeof apiClient.serverAddress === 'function' ) { safeServerAddress = apiClient.serverAddress();
+            } else if ( apiClient._serverAddress ) { 
+                safeServerAddress = apiClient._serverAddress;
+            }
+
+            if ( currentUserId && accessToken && safeServerAddress ) {
 
                 if ( !coreSlideData.slideshow.hasInitialized ) {
                     initCoreData(function() {
-                        
-                        // ServerAddress
-                        var safeServerAddress = typeof window.ApiClient.serverAddress === 'function' ? window.ApiClient.serverAddress() : "";
-
                         fetch(safeServerAddress + '/CoreSlider/config', {
                             method: 'GET',
                             headers: getAuthHeader()
@@ -131,6 +146,7 @@ function initCoreSlider() {
                             console.log("Core Slider - Configuration completed.");
                             if ( coreSlideSettings.TrailersEnabled && coreSlideSettings.TrailersYoutube ) { initYouTubeAPI(); }
                             initCoreDataSlides();
+                            coreSlideData.slideshow.isInitializing = false;
 
                         }).catch(function(error) {
                             console.warn("Core Slider - Failed to load custom plugin config. Re-checking...", error);
@@ -155,7 +171,7 @@ function initCoreSlider() {
     function initCoreData(callback) {
         if ( !window.ApiClient ) {
             console.warn("Core Slider - apiClient is not available yet. Retrying...");
-            setTimeout(function() { initCoreData(callback), coreSlideInfo.retryInterval });
+            setTimeout(function() { initCoreData(callback); }, coreSlideInfo.retryInterval);
             return;
         }
 
@@ -165,24 +181,66 @@ function initCoreSlider() {
             var layoutMatch = htmlClasses.match(/layout-(\w+)/);
             var layout = layoutMatch ? layoutMatch[1] : null;
 
+            if ( !htmlClasses ) { htmlClasses = ''; }
+
+            var currentUserId = "Not Found",
+                appName = "Not Found",
+                appVersion = "Not Found",
+                deviceName = "Not Found",
+                deviceId = "Not Found",
+                accessToken = "Not Found",
+                serverId = "Not Found",
+                serverAddress = "Not Found",
+                appInfo = null;
+
+            if ( typeof apiClient.getCurrentUserId === 'function' ) { currentUserId = apiClient.getCurrentUserId();
+            } else if ( apiClient._currentUser && apiClient._currentUser.Id ) {
+                currentUserId = apiClient._currentUser.Id;
+            }
+
+            if ( apiClient._appName ) { appName = apiClient._appName;
+            } else if ( apiClient.getAppInfo && typeof apiClient.getAppInfo === 'function' ) {
+                var appInfo = apiClient.getAppInfo();
+                if ( appInfo && appInfo.name ) { appName = appInfo.name; }
+            }
+
+            if ( apiClient._appVersion ) { appVersion = apiClient._appVersion;
+            } else if ( apiClient.getAppInfo && typeof apiClient.getAppInfo === 'function' ) {
+                var appInfo = apiClient.getAppInfo();
+                if ( appInfo && appInfo.version ) { appVersion = appInfo.version; }
+            }
+
+            if ( apiClient._deviceName ) { deviceName = apiClient._deviceName; }
+            if ( apiClient._deviceId ) { deviceId = apiClient._deviceId; }
+
+            if ( typeof apiClient.accessToken === 'function' ) { accessToken = apiClient.accessToken();
+            } else if ( apiClient._serverInfo && apiClient._serverInfo.AccessToken ) {
+                accessToken = apiClient._serverInfo.AccessToken;
+            }
+
+            if ( apiClient._serverInfo && apiClient._serverInfo.Id ) { serverId = apiClient._serverInfo.Id; }
+
+            if ( typeof apiClient.serverAddress === 'function' ) { serverAddress = apiClient.serverAddress();
+            } else if ( apiClient._serverAddress ) { serverAddress = apiClient._serverAddress; }
+
             coreSlideData.jellyfinData = {
-                userId: apiClient.getCurrentUserId() || "Not Found",
-                appName: apiClient._appName || "Not Found",
-                appVersion: apiClient._appVersion || "Not Found",
-                deviceName: apiClient._deviceName || "Not Found",
+                userId: currentUserId,
+                appName: appName,
+                appVersion: appVersion,
+                deviceName: deviceName,
                 deviceLayout: layout || "Not Found",
-                deviceId: apiClient._deviceId || "Not Found",
-                accessToken: apiClient._serverInfo.AccessToken || "Not Found",
-                serverId: apiClient._serverInfo.Id || "Not Found",
-                serverAddress: apiClient._serverAddress || "Not Found",
+                deviceId: deviceId,
+                accessToken: accessToken,
+                serverId: serverId,
+                serverAddress: serverAddress,
             };
-            
+
             if ( callback && typeof callback === "function" ) {
                 callback();
             }
         } catch (error) {
             console.error("Core Slider - Error initializing ApiClient data:", error);
-            setTimeout(function() { initCoreData(callback), coreSlideInfo.retryInterval });
+            setTimeout(function() { initCoreData(callback); }, coreSlideInfo.retryInterval);
         }
     };
 
@@ -783,12 +841,13 @@ function initCoreSlider() {
         var coreSlide = document.createElement('div');
         coreSlide.id = 'core-slider';
         if ( coreSlideSettings.Theme !== 'default' ) { coreSlide.classList.add('core-slider-' + coreSlideSettings.Theme); }
-        if ( !coreSlideSettings.AnimationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv' || !coreSlideSettings.AnimationEffect ) { coreSlide.classList.add('core-slider-no-animation'); }
+        if ( (!coreSlideSettings.AnimationEffectTV && coreSlideData.jellyfinData.deviceLayout === 'tv') || !coreSlideSettings.AnimationEffect ) { coreSlide.classList.add('core-slider-no-animation'); }
 
         // Add custom height to prevent menu from covering the slider
         if ( coreSlideSettings.Theme === 'default' ) {
             var headerMenu = document.querySelector('header');
-            var headerHeight = headerMenu.offsetHeight;
+            var headerHeight = 0;
+            if ( headerMenu && headerMenu.offsetHeight ) { headerHeight = headerMenu.offsetHeight; }
             document.documentElement.style.setProperty('--slider-height-header', headerHeight + 'px');
         }
 
@@ -829,11 +888,12 @@ function initCoreSlider() {
         coreSlideData.slideshow.elements.createDots = createDots;
 
         var appMenu = document.getElementById('app-sync-play-menu');
-        if ( !appMenu ) {
-            appMenu = document.getElementById('reactRoot');
-            appMenu.parentNode.insertBefore(coreSlide, appMenu.nextSibling);
-        } else {
+        if ( appMenu && appMenu.parentNode && coreSlideData.jellyfinData.deviceLayout !== 'tv' ) {
             appMenu.parentNode.insertBefore(coreSlide, appMenu);
+        } else if ( document.body ) {
+            document.body.appendChild(coreSlide);
+        } else if ( document.documentElement ) {
+            document.documentElement.appendChild(coreSlide);
         }
 
         return { coreSlide: coreSlide, createSlides: createSlides, createDots: createDots, buttonNext: buttonNext, buttonPrevious: buttonPrevious };
@@ -1487,8 +1547,19 @@ function initCoreSlider() {
     function checkAndShowSlider() {
         // Variables
         var coreSlide = document.getElementById('core-slider');
-        var currentPath = window.location.href.toLowerCase().replace(window.location.origin, "");
-        var isHome = currentPath.indexOf("/web/#/home.html") > -1 || currentPath.indexOf("/web/#/home") > -1 || currentPath.indexOf("/web/index.html#/home.html") > -1 || currentPath === "/web/index.html#/home" || currentPath === "/web/?#/home.html";
+        var currentUrl = (window.location.href || '').toLowerCase();
+        var currentHash = (window.location.hash || '').toLowerCase();
+        var currentPath = (window.location.pathname || '').toLowerCase();
+
+        var isHome = currentHash.indexOf('/home') > -1 ||
+            currentHash.indexOf('home.html') > -1 ||
+            currentUrl.indexOf('/web/#/home') > -1 ||
+            currentUrl.indexOf('/web/index.html#/home') > -1 ||
+            currentUrl.indexOf('/web/?#/home') > -1 ||
+            currentUrl.indexOf('/web/#/home.html') > -1 ||
+            currentUrl.indexOf('/web/index.html#/home.html') > -1 ||
+            (currentPath.indexOf('/home') > -1 && currentUrl.indexOf('/web') > -1);
+
         coreSlideData.slideshow.isHome = isHome;
 
         // Slider has been initialized at home?

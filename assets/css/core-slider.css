@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.6
+    Version: 1.1.1.7
 */
 
 :root {
@@ -576,7 +576,7 @@
 
 /* TV */
 .layout-tv #core-slider {
-    margin-top: 1em;
+    margin-top: 5.2em;
 }
 
 /* TV - No Animation */

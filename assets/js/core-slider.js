@@ -274,13 +274,16 @@ function initCoreSlider() {
                     return;
                 }
 
-                fetch(coreSlideData.jellyfinData.serverAddress + '/Items?IncludeItemTypes=' + coreSlideSettings.SearchType + '&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&sortBy=Random&isPlayed=False&enableUserData=true&Limit=' + coreSlideSettings.MaxItems + '&fields=Id,ImageTags,RemoteTrailers,HasTrailer', {
+                var requestedMaxItems = Math.max(parseInt(coreSlideSettings.MaxItems, 10) || 6, 6);
+                var requestLimit = Math.max(requestedMaxItems * 3, 20);
+
+                fetch(coreSlideData.jellyfinData.serverAddress + '/Items?IncludeItemTypes=' + coreSlideSettings.SearchType + '&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&sortBy=Random&isPlayed=False&enableUserData=true&Limit=' + requestLimit + '&fields=Id,ImageTags,RemoteTrailers,HasTrailer', {
                     headers: getAuthHeader(),
                 }).then(function(response) {
                     return response.json();
                 }).then(function(data) {
                     var items = data.Items || [];
-                    var filteredItems = items.filter(function(item) { return item.ImageTags && item.ImageTags.Logo; }).map(function(item) { return item.Id; });
+                    var filteredItems = items.filter(function(item) { return item && item.Id && item.ImageTags && item.ImageTags.Logo; }).map(function(item) { return item.Id; }).slice(0, requestedMaxItems);
 
                     resolve(filteredItems);
                 }).catch(function(error) {
@@ -1601,33 +1604,46 @@ function initCoreSlider() {
     }
 
     function initVisibilityObserver() {
-        // Listen url changes
-        window.addEventListener('hashchange', function() {
-            checkAndShowSlider();
-        });
+        function bindVisibilityObserver() {
+            // Listen url changes
+            window.addEventListener('hashchange', function() {
+                checkAndShowSlider();
+            });
 
-        // Observe Jellyfin
-        var observer = new MutationObserver(function (mutations) {
-            checkAndShowSlider();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
+            // Observe Jellyfin
+            var observer = new MutationObserver(function (mutations) {
+                checkAndShowSlider();
+            });
 
-        // One time event delegation - Emby Buttons (favorite)
-        document.addEventListener('click', function(event) {
-            var tabButton = event.target.closest('.headerTabs .emby-tab-button');
-            
-            if ( tabButton ) {
-                if ( tabButton.innerText.toLowerCase() === 'home' ) {
-                    coreSlideData.slideshow.isHidden = false;
-                } else {
-                    coreSlideData.slideshow.isHidden = true;
-                }
-                
-                setTimeout(checkAndShowSlider, 50);
+            var rootNode = document.body || document.documentElement;
+            if ( rootNode ) {
+                observer.observe(rootNode, { childList: true, subtree: true });
             }
-        });
 
-        checkAndShowSlider();
+            // One time event delegation - Emby Buttons (favorite)
+            document.addEventListener('click', function(event) {
+                var tabButton = event.target.closest('.headerTabs .emby-tab-button');
+                
+                if ( tabButton ) {
+                    if ( tabButton.innerText.toLowerCase() === 'home' ) {
+                        coreSlideData.slideshow.isHidden = false;
+                    } else {
+                        coreSlideData.slideshow.isHidden = true;
+                    }
+                    
+                    setTimeout(checkAndShowSlider, 50);
+                }
+            });
+
+            checkAndShowSlider();
+        }
+
+        if ( document.readyState === 'loading' ) {
+            document.addEventListener('DOMContentLoaded', bindVisibilityObserver, { once: true });
+            return;
+        }
+
+        bindVisibilityObserver();
     }
 
     initVisibilityObserver();

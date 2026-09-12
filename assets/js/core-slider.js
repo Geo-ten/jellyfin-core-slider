@@ -1554,14 +1554,14 @@ function initCoreSlider() {
         var currentHash = (window.location.hash || '').toLowerCase();
         var currentPath = (window.location.pathname || '').toLowerCase();
 
-        var isHome = currentHash.indexOf('/home') > -1 ||
+        var isHome = currentHash.indexOf('?tab=1') === -1 && ( currentHash.indexOf('/home') > -1 ||
             currentHash.indexOf('home.html') > -1 ||
             currentUrl.indexOf('/web/#/home') > -1 ||
             currentUrl.indexOf('/web/index.html#/home') > -1 ||
             currentUrl.indexOf('/web/?#/home') > -1 ||
             currentUrl.indexOf('/web/#/home.html') > -1 ||
             currentUrl.indexOf('/web/index.html#/home.html') > -1 ||
-            (currentPath.indexOf('/home') > -1 && currentUrl.indexOf('/web') > -1);
+            (currentPath.indexOf('/home') > -1 && currentUrl.indexOf('/web') > -1) );
 
         coreSlideData.slideshow.isHome = isHome;
 
@@ -1623,7 +1623,7 @@ function initCoreSlider() {
             // One time event delegation - Emby Buttons (favorite)
             document.addEventListener('click', function(event) {
                 var tabButton = event.target.closest('.headerTabs .emby-tab-button');
-                
+                               
                 if ( tabButton ) {
                     if ( tabButton.innerText.toLowerCase() === 'home' ) {
                         coreSlideData.slideshow.isHidden = false;

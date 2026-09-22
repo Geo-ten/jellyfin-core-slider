@@ -42,6 +42,8 @@ namespace Jellyfin.Plugin.CoreSlider.Configuration {
         public bool TrailersYoutube { get; set; } = false;
         public bool TrailersLocal { get; set; } = false;
         public bool TrailersMuted { get; set; } = false;
+        public bool TrailersAsBackground { get; set; } = false;
+        public bool TrailersOverflow { get; set; } = false;
         public int TrailersInterval { get; set; } = 3000;
 
 

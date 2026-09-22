@@ -375,7 +375,11 @@ function initCoreSlider() {
 
         video.play();
         video.classList.add('core-slide-video-active');
-        triggerLayout(null, 'hide');
+        if ( !coreSlideSettings.TrailersAsBackground ) {
+            triggerLayout(null, 'hide');
+        } else {
+            video.controls = false;
+        }
         stopAutoplay();
         coreSlideData.slideshow.trailer.isPlaying = true;
     }
@@ -486,7 +490,12 @@ function initCoreSlider() {
         parent.dataset.videoEnabled = true;
         coreSlideData.slideshow.trailer.isPlaying = true;
         stopAutoplay();
-        triggerLayout(null, 'hide');
+
+        if ( !coreSlideSettings.TrailersAsBackground ) {
+            triggerLayout(null, 'hide');
+        } else {
+            parent.youtubePlayer.controls = 0;
+        }
 
         if ( state === 'exist' ) {
             if ( coreSlideSettings.TrailersMuted ) { parent.youtubePlayer.mute(); } else { parent.youtubePlayer.unMute(); }
@@ -926,6 +935,9 @@ function initCoreSlider() {
                 var video = getItem.LocalTrailers.find(function(text) { /official trailer/i.test(text) }) || getItem.LocalTrailers[0];
                 createSlideBackdrop.classList.add('core-slide-video');
 
+                if ( coreSlideSettings.TrailersAsBackground ) { createSlideBackdrop.classList.add('core-slide-video-background'); }
+                if ( coreSlideSettings.TrailersOverflow ) { createSlideBackdrop.classList.add('core-slide-video-overflow'); }
+
                 var createVideo = document.createElement('video');
                 createVideo.muted = coreSlideSettings.TrailersMuted;
                 createVideo.controls = coreSlideData.jellyfinData.deviceLayout === 'tv' ? false : true;
@@ -943,6 +955,10 @@ function initCoreSlider() {
                 var videoID = youtubeID(video.Url);
     
                 createSlideBackdrop.classList.add('core-slide-video');
+
+                if ( coreSlideSettings.TrailersAsBackground ) { createSlideBackdrop.classList.add('core-slide-video-background'); }
+                if ( coreSlideSettings.TrailersOverflow ) { createSlideBackdrop.classList.add('core-slide-video-overflow'); }
+                                
                 createSlideBackdrop.dataset.videoId = videoID;
 
                 var createPassVideo = document.createElement('div');

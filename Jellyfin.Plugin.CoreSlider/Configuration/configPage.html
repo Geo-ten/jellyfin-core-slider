@@ -14,16 +14,19 @@
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="maxItems">Max Items</label>
                             <input type="number" id="maxItems" is="emby-input" />
+                            <div class="fieldDescription">Sets the maximum number of media items shown in the slider at one time.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="slideInterval">Slide Interval (ms)</label>
                             <input type="number" id="slideInterval" is="emby-input" />
+                            <div class="fieldDescription">Controls how long each slide stays visible before moving to the next one.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="maxOverviewLength">Max Overview Length</label>
                             <input type="number" id="maxOverviewLength" is="emby-input" />
+                            <div class="fieldDescription">Limits how many characters are displayed in the overview text for each item.</div>
                         </div>
 
                         <div class="inputContainer">
@@ -32,25 +35,29 @@
                                 <option value="default">Default</option>
                                 <option value="wide">Wide</option>
                             </select>
+                            <div class="fieldDescription">Changes the overall layout style and visual appearance of the slider.</div>
                         </div>
                         
                         <div class="inputContainer">
-                            <label class="inputLabel inputLabelUnfocused" for="slideShadow">Match The Slide Shadow With Your Theme Color</label>
+                            <label class="inputLabel inputLabelUnfocused" for="slideShadow">Match the Slide Shadow With Your Theme Color</label>
                             <input type="text" id="slideShadow" is="emby-input" placeholder="#101010" />
+                            <div class="fieldDescription">Set a custom shadow color so the slider blends nicely with your chosen theme.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="searchType">Search Type</label>
                             <select id="searchType" is="emby-select">
-                                <option value="Movie,Series">Movies & Series</option>
+                                <option value="Movie,Series">Movies &amp; Series</option>
                                 <option value="Movie">Movies</option>
                                 <option value="Series">Series</option>
                             </select>
+                            <div class="fieldDescription">Filters which types of media are included in the slider list.</div>
                         </div>
 
                         <div class="inputContainer">
-                            <label class="inputLabel inputLabelUnfocused" for="fileNameLocation">Custom List File For Static Slides (optional)</label>
+                            <label class="inputLabel inputLabelUnfocused" for="fileNameLocation">Custom List File for Static Slides (Optional)</label>
                             <input type="text" id="fileNameLocation" is="emby-input" placeholder="Put the list.txt in the same folder, where Jellyfin app exists '..web\assets\list.txt' - (only IDs inside 1,2)" />
+                            <div class="fieldDescription">Adds a custom static slide list by pointing to a text file with media IDs.</div>
                         </div>
 
                         <h2>Animation</h2>
@@ -58,15 +65,17 @@
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="animationEffect" is="emby-checkbox" />
-                                <span>Enable Slide Animations Effects (Every Device)</span>
+                                <span>Enable Slide Animation Effects on Every Device</span>
                             </label>
+                            <div class="fieldDescription">Adds smooth slide motion and transitions to the carousel for all devices.</div>
                         </div>
 
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="animationEffectTV" is="emby-checkbox" />
-                                <span>Enable Slide Animations Effects on TV (Disable This For Higher Performance)</span>
+                                <span>Enable Slide Animation Effects on TV</span>
                             </label>
+                            <div class="fieldDescription">Turns on animation on TV devices. Disable this for better performance on lower-powered hardware.</div>
                         </div>
 
                         <h2>Quality</h2>
@@ -74,11 +83,13 @@
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="qualityBackdrop">Backdrop Quality (0-100)</label>
                             <input type="number" id="qualityBackdrop" is="emby-input" min="0" max="100" />
+                            <div class="fieldDescription">Adjusts the image quality used for the background art behind each item.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="qualityLogo">Logo Quality (0-100)</label>
                             <input type="number" id="qualityLogo" is="emby-input" min="0" max="100" />
+                            <div class="fieldDescription">Controls the resolution used for logo artwork shown in the slider.</div>
                         </div>
 
                         <h2>Buttons</h2>
@@ -89,6 +100,7 @@
                                 <option value="Default">Default</option>
                                 <option value="Netflix">Netflix</option>
                             </select>
+                            <div class="fieldDescription">Changes the visual style of the action buttons on each slide.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -96,11 +108,13 @@
                                 <input type="checkbox" id="buttonPlayEnabled" is="emby-checkbox" />
                                 <span>Enable Play Button</span>
                             </label>
+                            <div class="fieldDescription">Shows a Play button so users can start media immediately from the slide.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="buttonPlayName">Play Button Label</label>
                             <input type="text" id="buttonPlayName" is="emby-input" />
+                            <div class="fieldDescription">Customizes the text displayed on the Play button.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -108,11 +122,13 @@
                                 <input type="checkbox" id="buttonInfoEnabled" is="emby-checkbox" />
                                 <span>Enable Info Button</span>
                             </label>
+                            <div class="fieldDescription">Displays an Info button to open the item details panel or information view.</div>
                         </div>
 
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="buttonInfoName">Info Button Label</label>
                             <input type="text" id="buttonInfoName" is="emby-input" />
+                            <div class="fieldDescription">Sets the custom name shown for the Info button.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -120,10 +136,12 @@
                                 <input type="checkbox" id="buttonFavoriteEnabled" is="emby-checkbox" />
                                 <span>Enable Favorite Button</span>
                             </label>
+                            <div class="fieldDescription">Shows a favorite toggle so users can save items to their favorites list.</div>
                         </div>
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="buttonFavoriteName">Favorite Button Label</label>
                             <input type="text" id="buttonFavoriteName" is="emby-input" />
+                            <div class="fieldDescription">Sets the text shown for the favorite action.</div>
                         </div>
 
                         <h2>Trailers</h2>
@@ -133,13 +151,15 @@
                                 <input type="checkbox" id="trailersEnabled" is="emby-checkbox" />
                                 <span>Enable Trailers</span>
                             </label>
+                            <div class="fieldDescription">Turns trailer playback on for items in the slider.</div>
                         </div>
 
                         <div class="checkboxContainer">
                             <label class="emby-checkbox-label">
                                 <input type="checkbox" id="trailersYoutube" is="emby-checkbox" />
-                                <span>Enable Youtube Trailers</span>
+                                <span>Enable YouTube Trailers</span>
                             </label>
+                            <div class="fieldDescription">Allows trailers from YouTube to be used when available.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -147,6 +167,7 @@
                                 <input type="checkbox" id="trailersLocal" is="emby-checkbox" />
                                 <span>Enable Local Trailers</span>
                             </label>
+                            <div class="fieldDescription">Uses locally stored trailers from your Jellyfin library if they exist.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -154,11 +175,29 @@
                                 <input type="checkbox" id="trailersMuted" is="emby-checkbox" />
                                 <span>Start Trailers Muted</span>
                             </label>
+                            <div class="fieldDescription">Starts trailer playback with sound turned off for a quieter preview experience.</div>
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersAsBackground" is="emby-checkbox" />
+                                <span>Show Trailers as Background</span>
+                            </label>
+                            <div class="fieldDescription">Plays trailer video behind the slide instead of using a static image background.</div>
+                        </div>
+
+                        <div class="checkboxContainer">
+                            <label class="emby-checkbox-label">
+                                <input type="checkbox" id="trailersOverflow" is="emby-checkbox" />
+                                <span>Allow Trailer Overflow on Desktop</span>
+                            </label>
+                            <div class="fieldDescription">Lets the trailer extend beyond the slide area on desktop so it can zoom or fill the screen more naturally.</div>
                         </div>
                         
                         <div class="inputContainer">
-                            <label class="inputLabel inputLabelUnfocused" for="trailersInterval">Trailers Start interval (ms)</label>
+                            <label class="inputLabel inputLabelUnfocused" for="trailersInterval">Trailer Start Interval (ms)</label>
                             <input type="number" id="trailersInterval" is="emby-input" />
+                            <div class="fieldDescription">Sets the delay before the trailer starts playing after the slide is displayed.</div>
                         </div>
 
                         <h2>Details</h2>
@@ -168,6 +207,7 @@
                                 <input type="checkbox" id="infoPremiereDate" is="emby-checkbox" />
                                 <span>Show Premiere Date</span>
                             </label>
+                            <div class="fieldDescription">Displays when the title first premiered or was released.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -175,6 +215,7 @@
                                 <input type="checkbox" id="infoGenre" is="emby-checkbox" />
                                 <span>Show Genre</span>
                             </label>
+                            <div class="fieldDescription">Shows the item genre so users can quickly identify its category or theme.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -182,6 +223,7 @@
                                 <input type="checkbox" id="infoAgeRating" is="emby-checkbox" />
                                 <span>Show Age Rating</span>
                             </label>
+                            <div class="fieldDescription">Displays the content rating such as PG, TV-14, or similar classification.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -189,6 +231,7 @@
                                 <input type="checkbox" id="infoRuntime" is="emby-checkbox" />
                                 <span>Show Runtime</span>
                             </label>
+                            <div class="fieldDescription">Shows the media length or runtime for each item in the slider.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -196,6 +239,7 @@
                                 <input type="checkbox" id="infoStarRating" is="emby-checkbox" />
                                 <span>Show Star Rating</span>
                             </label>
+                            <div class="fieldDescription">Displays the average community rating or star score for the item.</div>
                         </div>
 
                         <div class="checkboxContainer">
@@ -203,6 +247,7 @@
                                 <input type="checkbox" id="infoRottenTomatoes" is="emby-checkbox" />
                                 <span>Show Rotten Tomatoes</span>
                             </label>
+                            <div class="fieldDescription">Shows the Rotten Tomatoes critic or audience score when available.</div>
                         </div>
 
                         <h2>Load app files from CDN/Local</h2>
@@ -228,7 +273,7 @@
                         <div class="cacheInfo">
                             <p><b>jsDelivr</b> - Updates after 12 hours if my app updates, or once a year.</p>
                             <p><b>GitHub</b> - Updates every 12 hours, or once you restart the server / clear the cache using the button.</p>
-                            <p><b>Local</b> - Does not update automatically. You need to update it manually. To update the cache of your browser, you can change the "Javascript Version" number.<br /><i>(Requires manual upload of files to ..jellyfin\web or jellyfin-web\assets\js or css\core-slider.js or css)</i></p>
+                            <p><b>Local</b> - Does not update automatically. You need to update it manually. To update the cache of your browser, you can change the "Javascript Version" number.<br /><i>(Requires manual upload of files to jellyfin\web or jellyfin-web\assets\js or css\core-slider.js or css)</i></p>
                         </div>
 
                         <p id="cacheGithubMessage" class="hide">Cache cleared successfully!</p>
@@ -285,6 +330,8 @@
                     document.getElementById('trailersYoutube').checked = config.TrailersYoutube;
                     document.getElementById('trailersLocal').checked = config.TrailersLocal;
                     document.getElementById('trailersMuted').checked = config.TrailersMuted;
+                    document.getElementById('trailersAsBackground').checked = config.TrailersAsBackground;
+                    document.getElementById('trailersOverflow').checked = config.TrailersOverflow;
                     document.getElementById('trailersInterval').value = config.TrailersInterval;
                     document.getElementById('infoPremiereDate').checked = config.InfoPremiereDate;
                     document.getElementById('infoGenre').checked = config.InfoGenre;
@@ -351,6 +398,8 @@
                         config.TrailersYoutube = document.getElementById('trailersYoutube').checked;
                         config.TrailersLocal = document.getElementById('trailersLocal').checked;
                         config.TrailersMuted = document.getElementById('trailersMuted').checked;
+                        config.TrailersAsBackground = document.getElementById('trailersAsBackground').checked;
+                        config.TrailersOverflow = document.getElementById('trailersOverflow').checked;
                         config.TrailersInterval = document.getElementById('trailersInterval').value;
                         config.CdnMethod = document.getElementById('cdnMethod').value;
                         config.LocalJsVersion = document.getElementById('localJsVersion').value;

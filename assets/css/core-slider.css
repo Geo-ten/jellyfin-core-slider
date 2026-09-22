@@ -5,7 +5,7 @@
     Author: Geoten
     Author URI: https://www.geoten.dev
     Description: 
-    Version: 1.1.1.8
+    Version: 1.1.1.9
 */
 
 :root {
@@ -269,6 +269,16 @@
     aspect-ratio: 16 / 9;
     transform: translateY(-50%);
     background-color: var(--slider-color-black);
+    object-fit: var(--slider-trailer-cover);
+}
+
+.core-slide.core-slide-active .core-slide-video-background video,
+.core-slide.core-slide-active .core-slide-video-background iframe {
+    right: auto;
+}
+
+.core-slide.core-slide-active .core-slide-video-overflow video,
+.core-slide.core-slide-active .core-slide-video-overflow iframe {
     object-fit: var(--slider-trailer-cover);
 }
 
@@ -548,6 +558,12 @@
     object-fit: var(--slider-trailer-cover-mobile);
 }
 
+.layout-mobile .core-slide.core-slide-active .core-slide-video-overflow video,
+.layout-mobile .core-slide.core-slide-active .core-slide-video-overflow iframe {
+    aspect-ratio: 16 / 5;
+    width: auto;
+    height: auto;
+}
 
 .layout-mobile .core-slide .core-slide-backdrop::before {
     background: linear-gradient(0deg, var(--slider-color-slide-shadow) 0%, transparent 70%);
@@ -684,6 +700,11 @@
     border-radius: 0;
 }
 
+.core-slider-wide .core-slide.core-slide-active .core-slide-video-overflow video,
+.core-slider-wide .core-slide.core-slide-active .core-slide-video-overflow iframe {
+    aspect-ratio: 13 / 9;
+}
+
 .core-slider-wide .core-slide .core-slide-backdrop::before {
     background: linear-gradient(0deg, var(--slider-color-slide-shadow), rgba(24, 24, 24, 0) 40%), linear-gradient(0deg, var(--slider-color-slide-shadow), rgba(24, 24, 24, 0) 70%);
 }
@@ -731,6 +752,11 @@
 /* Theme - Wide - Mobile */
 .layout-mobile .core-slider-wide .core-slide {
     justify-content: space-between;
+}
+
+.layout-mobile .core-slider-wide .core-slide.core-slide-active .core-slide-video-overflow video,
+.layout-mobile .core-slider-wide .core-slide.core-slide-active .core-slide-video-overflow iframe {
+    aspect-ratio: 13 / 5;
 }
 
 .layout-mobile.html-slider.html-slider-wide #reactRoot .homeSectionsContainer {
